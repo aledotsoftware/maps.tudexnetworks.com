@@ -1,0 +1,607 @@
+/* ============================================
+   WW3 INFOGRAPHIC MAP - STYLES
+   Dark military theme, pulsing markers,
+   popups, legend, info panel
+   ============================================ */
+
+/* ---- Pulse Markers ---- */
+.ww3-marker-wrapper {
+  background: none !important;
+  border: none !important;
+}
+
+.ww3-pulse-marker {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+}
+
+.ww3-marker-core {
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  color: #fff;
+  z-index: 10;
+  box-shadow: 0 0 12px var(--pulse-color, #ff4444),
+              0 0 24px rgba(0, 0, 0, 0.5);
+  border: 2px solid rgba(255, 255, 255, 0.35);
+  transition: transform 0.2s ease;
+}
+
+.ww3-marker-core:hover {
+  transform: scale(1.2);
+}
+
+.ww3-pulse-ring {
+  position: absolute;
+  border-radius: 50%;
+  border: 2px solid var(--pulse-color, #ff4444);
+  opacity: 0;
+  width: calc(var(--pulse-size, 30px) * 2.5);
+  height: calc(var(--pulse-size, 30px) * 2.5);
+}
+
+.ww3-pulse-ring-1 {
+  animation: ww3pulse 2.5s ease-out infinite;
+}
+
+.ww3-pulse-ring-2 {
+  animation: ww3pulse 2.5s ease-out infinite 0.8s;
+}
+
+.ww3-pulse-ring-3 {
+  animation: ww3pulse 2.5s ease-out infinite 1.6s;
+}
+
+@keyframes ww3pulse {
+  0% {
+    transform: scale(0.4);
+    opacity: 0.7;
+  }
+  100% {
+    transform: scale(1.6);
+    opacity: 0;
+  }
+}
+
+/* ---- Popup ---- */
+.ww3-popup-container .leaflet-popup-content-wrapper {
+  background: rgba(15, 18, 28, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+  border-radius: 12px !important;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.3);
+  padding: 0 !important;
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+}
+
+.ww3-popup-container .leaflet-popup-tip {
+  background: rgba(15, 18, 28, 0.96) !important;
+  border: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.ww3-popup-container .leaflet-popup-content {
+  margin: 0 !important;
+  width: 100% !important;
+}
+
+.ww3-popup-container .leaflet-popup-close-button {
+  color: #aaa !important;
+  font-size: 18px !important;
+  top: 8px !important;
+  right: 10px !important;
+  z-index: 100;
+}
+
+.ww3-popup {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: #e0e0e0;
+  max-width: 420px;
+}
+
+.ww3-popup-header {
+  padding: 16px 18px 12px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.ww3-popup-region-tag {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 10px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  font-weight: 700;
+  padding: 3px 10px;
+  border-radius: 4px;
+  color: #fff;
+  margin-bottom: 8px;
+}
+
+.ww3-popup-title {
+  font-size: 17px;
+  font-weight: 700;
+  color: #fff;
+  margin: 4px 0 8px;
+  line-height: 1.3;
+}
+
+.ww3-popup-status {
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  color: #ff6b6b;
+  border-left: 3px solid;
+  padding-left: 8px;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  animation: ww3statusBlink 2s ease-in-out infinite;
+}
+
+@keyframes ww3statusBlink {
+  0%, 100% { opacity: 1; }
+  50% { opacity: 0.5; }
+}
+
+.ww3-popup-body {
+  padding: 14px 18px 16px;
+}
+
+/* Severity */
+.ww3-severity-row {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+}
+
+.ww3-severity-label {
+  font-size: 11px;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+.ww3-severity-bars {
+  display: flex;
+  gap: 3px;
+}
+
+.ww3-sev-bar {
+  width: 20px;
+  height: 6px;
+  border-radius: 3px;
+  background: rgba(255, 255, 255, 0.1);
+  transition: background 0.3s;
+}
+
+.ww3-sev-bar.active {
+  box-shadow: 0 0 6px currentColor;
+}
+
+.ww3-severity-text {
+  font-size: 10px;
+  color: #aaa;
+  margin-left: 4px;
+}
+
+/* Factions */
+.ww3-factions {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  margin-bottom: 14px;
+  background: rgba(255, 255, 255, 0.04);
+  border-radius: 8px;
+  padding: 10px;
+}
+
+.ww3-faction {
+  flex: 1;
+  text-align: center;
+}
+
+.ww3-faction-label {
+  display: block;
+  font-size: 9px;
+  text-transform: uppercase;
+  color: #666;
+  letter-spacing: 1px;
+  margin-bottom: 4px;
+}
+
+.ww3-faction-name {
+  display: block;
+  font-size: 12px;
+  font-weight: 600;
+  color: #ddd;
+  line-height: 1.3;
+}
+
+.ww3-vs {
+  font-size: 11px;
+  font-weight: 900;
+  color: #ff4444;
+  text-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
+  flex-shrink: 0;
+}
+
+.ww3-popup-desc {
+  font-size: 12.5px;
+  line-height: 1.6;
+  color: #bbb;
+  margin: 0 0 12px;
+}
+
+/* Cross-links */
+.ww3-cross-links {
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 10px;
+}
+
+.ww3-cross-title {
+  font-size: 10px;
+  text-transform: uppercase;
+  color: #666;
+  letter-spacing: 1px;
+  display: block;
+  margin-bottom: 6px;
+}
+
+.ww3-cross-link {
+  display: inline-block;
+  font-size: 11px;
+  color: #4dd0e1;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 4px;
+  background: rgba(77, 208, 225, 0.1);
+  margin: 2px 4px 2px 0;
+  transition: all 0.2s;
+}
+
+.ww3-cross-link:hover {
+  background: rgba(77, 208, 225, 0.25);
+  color: #fff;
+}
+
+/* ---- Connection Lines ---- */
+.ww3-connection-label {
+  background: none !important;
+  border: none !important;
+}
+
+.ww3-connection-label span {
+  font-size: 9px;
+  color: rgba(255, 255, 255, 0.3);
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  font-weight: 600;
+  white-space: nowrap;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+}
+
+/* ---- Legend ---- */
+.ww3-legend {
+  background: rgba(12, 15, 24, 0.92) !important;
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 10px;
+  padding: 14px 16px;
+  color: #ccc;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  min-width: 200px;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+}
+
+.ww3-legend h4 {
+  margin: 0 0 12px;
+  font-size: 11px;
+  text-transform: uppercase;
+  letter-spacing: 2px;
+  color: #fff;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  padding-bottom: 8px;
+}
+
+.ww3-legend-item {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 6px;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: all 0.2s;
+  margin-bottom: 2px;
+}
+
+.ww3-legend-item:hover {
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.ww3-legend-hidden {
+  opacity: 0.35;
+}
+
+.ww3-legend-hidden .ww3-legend-color {
+  background: #555 !important;
+}
+
+.ww3-legend-color {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+  box-shadow: 0 0 6px currentColor;
+}
+
+.ww3-legend-name {
+  flex: 1;
+  font-size: 11.5px;
+  font-weight: 500;
+}
+
+.ww3-legend-count {
+  font-size: 10px;
+  background: rgba(255, 255, 255, 0.1);
+  padding: 1px 7px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.ww3-legend-severity-section {
+  margin-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  padding-top: 8px;
+}
+
+.ww3-legend-severity-section h5 {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #888;
+  margin: 0 0 6px;
+}
+
+.ww3-legend-severity {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 10px;
+  color: #999;
+  margin-bottom: 3px;
+}
+
+.ww3-legend-sev-dot {
+  border-radius: 50%;
+  background: #ff4444;
+  flex-shrink: 0;
+}
+
+/* ---- Info Panel (Left Side) ---- */
+.ww3-info-panel {
+  position: fixed;
+  top: 55px;
+  left: 0;
+  width: 280px;
+  max-height: calc(100vh - 60px);
+  background: rgba(10, 13, 22, 0.94);
+  backdrop-filter: blur(14px);
+  -webkit-backdrop-filter: blur(14px);
+  border-right: 1px solid rgba(255, 255, 255, 0.06);
+  z-index: 1000;
+  overflow-y: auto;
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
+  transition: transform 0.3s ease;
+}
+
+.ww3-info-panel::-webkit-scrollbar {
+  width: 4px;
+}
+
+.ww3-info-panel::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+.ww3-info-panel::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.15);
+  border-radius: 4px;
+}
+
+.ww3-panel-header {
+  padding: 14px 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  position: sticky;
+  top: 0;
+  background: rgba(10, 13, 22, 0.98);
+  z-index: 10;
+}
+
+.ww3-panel-header h3 {
+  color: #fff;
+  font-size: 12px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.ww3-panel-count {
+  font-size: 10px;
+  color: #ff6b6b;
+  background: rgba(255, 107, 107, 0.15);
+  padding: 2px 8px;
+  border-radius: 10px;
+  font-weight: 700;
+}
+
+.ww3-panel-body {
+  padding: 8px 0;
+}
+
+.ww3-panel-region {
+  margin-bottom: 4px;
+}
+
+.ww3-panel-region-header {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 10px 14px;
+  font-size: 11px;
+  font-weight: 700;
+  color: #fff;
+  text-transform: uppercase;
+  letter-spacing: 1px;
+  background: rgba(255, 255, 255, 0.03);
+}
+
+.ww3-panel-region-header small {
+  display: block;
+  font-size: 9px;
+  color: #777;
+  font-weight: 400;
+  letter-spacing: 0.5px;
+  margin-left: auto;
+  text-transform: none;
+}
+
+.ww3-panel-conflict {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 8px 14px 8px 20px;
+  cursor: pointer;
+  transition: all 0.2s;
+  border-left: 2px solid transparent;
+}
+
+.ww3-panel-conflict:hover {
+  background: rgba(255, 255, 255, 0.06);
+  border-left-color: var(--pulse-color, #fff);
+}
+
+.ww3-panel-sev {
+  width: 22px;
+  height: 22px;
+  border-radius: 50%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 10px;
+  font-weight: 900;
+  color: #fff;
+  flex-shrink: 0;
+}
+
+.ww3-panel-conflict-info {
+  flex: 1;
+  overflow: hidden;
+}
+
+.ww3-panel-conflict-info strong {
+  display: block;
+  font-size: 11.5px;
+  color: #ddd;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.ww3-panel-conflict-info small {
+  display: block;
+  font-size: 9px;
+  color: #777;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-top: 2px;
+}
+
+/* ---- Conflict Counter (Top Bar) ---- */
+.ww3-conflict-counter {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  padding: 0 12px;
+}
+
+.ww3-counter-badge {
+  font-size: 11px;
+  font-weight: 700;
+  padding: 4px 10px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  gap: 5px;
+  letter-spacing: 0.5px;
+}
+
+.ww3-counter-total {
+  background: rgba(255, 255, 255, 0.12);
+  color: #fff;
+}
+
+.ww3-counter-critical {
+  background: rgba(255, 68, 68, 0.2);
+  color: #ff6b6b;
+  animation: ww3statusBlink 3s ease-in-out infinite;
+}
+
+/* ---- Theater Polygons ---- */
+.ww3-theater {
+  transition: fill-opacity 0.3s, stroke-width 0.3s;
+}
+
+/* ---- Dark Theme Override ---- */
+.leaflet-control-attribution {
+  background: rgba(10, 13, 22, 0.8) !important;
+  color: #666 !important;
+}
+
+.leaflet-control-attribution a {
+  color: #888 !important;
+}
+
+/* ---- Responsive ---- */
+@media (max-width: 768px) {
+  .ww3-info-panel {
+    width: 100%;
+    max-height: 40vh;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    border-right: none;
+    border-top: 1px solid rgba(255, 255, 255, 0.1);
+    transform: translateY(calc(100% - 50px));
+  }
+
+  .ww3-info-panel:hover,
+  .ww3-info-panel:focus-within {
+    transform: translateY(0);
+  }
+
+  .ww3-legend {
+    max-width: 180px;
+    font-size: 10px;
+  }
+
+  .ww3-popup {
+    max-width: 300px;
+  }
+}
