@@ -1,8 +1,115 @@
 /* ============================================
-   WW3 INFOGRAPHIC MAP - STYLES
-   Dark military theme, pulsing markers,
-   popups, legend, info panel
+   WW3 INFOGRAPHIC MAP - COMPLETE STYLES v2
+   Clean dark military theme, improved colors,
+   pulsing markers, glassmorphism
    ============================================ */
+
+/* ---- Global Reset for WW3 ---- */
+body {
+  font-family: 'Inter', 'Segoe UI', system-ui, sans-serif !important;
+  overflow: hidden;
+}
+
+/* ==== HIDE ALL OLD ARGENMAP UI ==== */
+#top-left-logo,
+#top-left-logo-link,
+#logo-help,
+#top-right-logo,
+#top-right-logo-link,
+#geoserver-login-btn,
+.menu-container,
+#botonera,
+#menu-content,
+#sidebar,
+#basemap-selector,
+#load-layer,
+#help-tour,
+#accessibility,
+#developerLogo,
+#nav-help-btn,
+#accessibility-btn,
+#load-layer-btn,
+.leaflet-control-simpleMapScreenshoter,
+.leaflet-control-customgraticule,
+.leaflet-control-locate,
+.leaflet-control-measure {
+  display: none !important;
+  visibility: hidden !important;
+  pointer-events: none !important;
+}
+
+/* ==== DARK NAVBAR ==== */
+.navbar {
+  background: rgba(8, 10, 18, 0.97) !important;
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05) !important;
+  box-shadow: 0 2px 24px rgba(0, 0, 0, 0.5) !important;
+  min-height: 48px !important;
+  height: 48px !important;
+  z-index: 2000 !important;
+}
+
+.navbar .container-fluid {
+  padding: 0 16px !important;
+}
+
+.navbar .row {
+  align-items: center !important;
+  min-height: 48px !important;
+}
+
+/* ==== WW3 LOGO TEXT ==== */
+#logoText {
+  font-family: 'Inter', sans-serif !important;
+  font-weight: 900 !important;
+  font-size: 15px !important;
+  letter-spacing: 4px !important;
+  text-transform: uppercase !important;
+  color: #FF3D3D !important;
+  text-shadow: 0 0 12px rgba(255, 61, 61, 0.5), 0 0 30px rgba(255, 61, 61, 0.2);
+  text-decoration: none !important;
+  padding-left: 8px !important;
+}
+
+/* ==== SEARCH BAR DARK ==== */
+#search-navbar input,
+#search-navbar .search-input,
+.leaflet-search-input {
+  background: rgba(255, 255, 255, 0.06) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08) !important;
+  color: #ccc !important;
+  border-radius: 8px !important;
+  font-size: 12px !important;
+}
+
+#search-navbar input::placeholder {
+  color: #555 !important;
+}
+
+/* ==== MAP CONTROLS DARK ==== */
+.leaflet-bar a,
+.leaflet-bar a:hover {
+  background: rgba(13, 17, 23, 0.92) !important;
+  color: #bbb !important;
+  border-color: rgba(255, 255, 255, 0.08) !important;
+  transition: all 0.2s !important;
+}
+
+.leaflet-bar a:hover {
+  background: rgba(25, 30, 42, 0.95) !important;
+  color: #fff !important;
+}
+
+.leaflet-control-attribution {
+  background: rgba(8, 10, 18, 0.85) !important;
+  color: #555 !important;
+  font-size: 10px !important;
+}
+
+.leaflet-control-attribution a {
+  color: #777 !important;
+}
 
 /* ---- Pulse Markers ---- */
 .ww3-marker-wrapper {
@@ -26,14 +133,15 @@
   justify-content: center;
   color: #fff;
   z-index: 10;
-  box-shadow: 0 0 12px var(--pulse-color, #ff4444),
-              0 0 24px rgba(0, 0, 0, 0.5);
-  border: 2px solid rgba(255, 255, 255, 0.35);
+  box-shadow: 0 0 14px var(--pulse-color, #ff4444),
+    0 0 28px rgba(0, 0, 0, 0.6);
+  border: 2px solid rgba(255, 255, 255, 0.4);
+  cursor: pointer;
   transition: transform 0.2s ease;
 }
 
 .ww3-marker-core:hover {
-  transform: scale(1.2);
+  transform: scale(1.25);
 }
 
 .ww3-pulse-ring {
@@ -62,6 +170,7 @@
     transform: scale(0.4);
     opacity: 0.7;
   }
+
   100% {
     transform: scale(1.6);
     opacity: 0;
@@ -70,18 +179,17 @@
 
 /* ---- Popup ---- */
 .ww3-popup-container .leaflet-popup-content-wrapper {
-  background: rgba(15, 18, 28, 0.96) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1);
-  border-radius: 12px !important;
-  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.6), 0 0 20px rgba(0, 0, 0, 0.3);
+  background: rgba(10, 12, 20, 0.97) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
+  border-radius: 14px !important;
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.7), 0 0 1px rgba(255, 255, 255, 0.1);
   padding: 0 !important;
-  backdrop-filter: blur(10px);
-  -webkit-backdrop-filter: blur(10px);
+  backdrop-filter: blur(14px);
 }
 
 .ww3-popup-container .leaflet-popup-tip {
-  background: rgba(15, 18, 28, 0.96) !important;
-  border: 1px solid rgba(255, 255, 255, 0.1);
+  background: rgba(10, 12, 20, 0.97) !important;
+  border: 1px solid rgba(255, 255, 255, 0.08);
 }
 
 .ww3-popup-container .leaflet-popup-content {
@@ -90,67 +198,78 @@
 }
 
 .ww3-popup-container .leaflet-popup-close-button {
-  color: #aaa !important;
-  font-size: 18px !important;
-  top: 8px !important;
-  right: 10px !important;
+  color: #666 !important;
+  font-size: 20px !important;
+  top: 10px !important;
+  right: 12px !important;
   z-index: 100;
+}
+
+.ww3-popup-container .leaflet-popup-close-button:hover {
+  color: #fff !important;
 }
 
 .ww3-popup {
   font-family: 'Inter', 'Segoe UI', sans-serif;
-  color: #e0e0e0;
+  color: #d0d0d0;
   max-width: 420px;
 }
 
 .ww3-popup-header {
-  padding: 16px 18px 12px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  padding: 18px 20px 14px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
 }
 
 .ww3-popup-region-tag {
   display: inline-flex;
   align-items: center;
   gap: 6px;
-  font-size: 10px;
+  font-size: 9px;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
-  font-weight: 700;
-  padding: 3px 10px;
+  letter-spacing: 2px;
+  font-weight: 800;
+  padding: 4px 10px;
   border-radius: 4px;
   color: #fff;
-  margin-bottom: 8px;
+  margin-bottom: 10px;
 }
 
 .ww3-popup-title {
-  font-size: 17px;
-  font-weight: 700;
+  font-size: 16px;
+  font-weight: 800;
   color: #fff;
-  margin: 4px 0 8px;
-  line-height: 1.3;
+  margin: 4px 0 10px;
+  line-height: 1.35;
 }
 
 .ww3-popup-status {
-  font-size: 11px;
-  font-weight: 600;
+  font-size: 10px;
+  font-weight: 700;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  color: #ff6b6b;
+  letter-spacing: 1.2px;
+  color: #ff5252;
   border-left: 3px solid;
   padding-left: 8px;
   display: flex;
   align-items: center;
   gap: 6px;
-  animation: ww3statusBlink 2s ease-in-out infinite;
+  animation: ww3statusBlink 2.5s ease-in-out infinite;
 }
 
 @keyframes ww3statusBlink {
-  0%, 100% { opacity: 1; }
-  50% { opacity: 0.5; }
+
+  0%,
+  100% {
+    opacity: 1;
+  }
+
+  50% {
+    opacity: 0.4;
+  }
 }
 
 .ww3-popup-body {
-  padding: 14px 18px 16px;
+  padding: 16px 20px 18px;
 }
 
 /* Severity */
@@ -162,10 +281,11 @@
 }
 
 .ww3-severity-label {
-  font-size: 11px;
-  color: #888;
+  font-size: 10px;
+  color: #666;
   text-transform: uppercase;
-  letter-spacing: 0.5px;
+  letter-spacing: 1px;
+  font-weight: 600;
 }
 
 .ww3-severity-bars {
@@ -174,21 +294,21 @@
 }
 
 .ww3-sev-bar {
-  width: 20px;
-  height: 6px;
+  width: 22px;
+  height: 5px;
   border-radius: 3px;
-  background: rgba(255, 255, 255, 0.1);
-  transition: background 0.3s;
+  background: rgba(255, 255, 255, 0.08);
 }
 
 .ww3-sev-bar.active {
-  box-shadow: 0 0 6px currentColor;
+  box-shadow: 0 0 8px currentColor;
 }
 
 .ww3-severity-text {
   font-size: 10px;
-  color: #aaa;
+  color: #888;
   margin-left: 4px;
+  font-weight: 500;
 }
 
 /* Factions */
@@ -197,9 +317,10 @@
   align-items: center;
   gap: 8px;
   margin-bottom: 14px;
-  background: rgba(255, 255, 255, 0.04);
-  border-radius: 8px;
-  padding: 10px;
+  background: rgba(255, 255, 255, 0.03);
+  border: 1px solid rgba(255, 255, 255, 0.04);
+  border-radius: 10px;
+  padding: 12px;
 }
 
 .ww3-faction {
@@ -211,9 +332,10 @@
   display: block;
   font-size: 9px;
   text-transform: uppercase;
-  color: #666;
-  letter-spacing: 1px;
-  margin-bottom: 4px;
+  color: #555;
+  letter-spacing: 1.2px;
+  margin-bottom: 5px;
+  font-weight: 600;
 }
 
 .ww3-faction-name {
@@ -221,53 +343,55 @@
   font-size: 12px;
   font-weight: 600;
   color: #ddd;
-  line-height: 1.3;
+  line-height: 1.35;
 }
 
 .ww3-vs {
   font-size: 11px;
   font-weight: 900;
-  color: #ff4444;
-  text-shadow: 0 0 8px rgba(255, 68, 68, 0.5);
+  color: #FF3D3D;
+  text-shadow: 0 0 10px rgba(255, 61, 61, 0.5);
   flex-shrink: 0;
 }
 
 .ww3-popup-desc {
   font-size: 12.5px;
-  line-height: 1.6;
-  color: #bbb;
+  line-height: 1.65;
+  color: #aaa;
   margin: 0 0 12px;
 }
 
 /* Cross-links */
 .ww3-cross-links {
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
-  padding-top: 10px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  padding-top: 12px;
 }
 
 .ww3-cross-title {
-  font-size: 10px;
+  font-size: 9px;
   text-transform: uppercase;
-  color: #666;
-  letter-spacing: 1px;
+  color: #555;
+  letter-spacing: 1.5px;
   display: block;
-  margin-bottom: 6px;
+  margin-bottom: 8px;
+  font-weight: 600;
 }
 
 .ww3-cross-link {
   display: inline-block;
   font-size: 11px;
-  color: #4dd0e1;
+  color: #40C4FF;
   cursor: pointer;
-  padding: 3px 8px;
-  border-radius: 4px;
-  background: rgba(77, 208, 225, 0.1);
+  padding: 3px 10px;
+  border-radius: 6px;
+  background: rgba(64, 196, 255, 0.08);
   margin: 2px 4px 2px 0;
   transition: all 0.2s;
+  font-weight: 500;
 }
 
 .ww3-cross-link:hover {
-  background: rgba(77, 208, 225, 0.25);
+  background: rgba(64, 196, 255, 0.2);
   color: #fff;
 }
 
@@ -279,89 +403,165 @@
 
 .ww3-connection-label span {
   font-size: 9px;
-  color: rgba(255, 255, 255, 0.3);
+  color: rgba(98, 177, 246, 0.55);
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  font-weight: 600;
+  font-weight: 700;
   white-space: nowrap;
-  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.8);
+  text-shadow: 0 1px 6px rgba(0, 0, 0, 1), 0 0 3px rgba(0, 0, 0, 0.8);
+}
+
+.ww3-connection-line {
+  cursor: pointer;
+}
+
+/* Connection Popup */
+.ww3-conn-popup {
+  font-family: 'Inter', 'Segoe UI', sans-serif;
+  color: #d0d0d0;
+}
+
+.ww3-conn-popup-header {
+  font-size: 11px;
+  font-weight: 800;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #90CAF9;
+  padding: 14px 16px 8px;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
+  display: flex;
+  align-items: center;
+  gap: 8px;
+}
+
+.ww3-conn-popup-endpoints {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  padding: 10px 16px;
+  justify-content: center;
+}
+
+.ww3-conn-popup-endpoints i {
+  color: #555;
+  font-size: 10px;
+}
+
+.ww3-conn-from,
+.ww3-conn-to {
+  font-size: 11px;
+  font-weight: 600;
+  color: #62B1F6;
+  cursor: pointer;
+  padding: 3px 8px;
+  border-radius: 6px;
+  background: rgba(98, 177, 246, 0.08);
+  transition: all 0.2s;
+}
+
+.ww3-conn-from:hover,
+.ww3-conn-to:hover {
+  background: rgba(98, 177, 246, 0.2);
+  color: #fff;
+}
+
+.ww3-conn-popup-desc {
+  font-size: 12px;
+  line-height: 1.65;
+  color: #aaa;
+  margin: 0;
+  padding: 8px 16px 16px;
 }
 
 /* ---- Legend ---- */
 .ww3-legend {
-  background: rgba(12, 15, 24, 0.92) !important;
-  backdrop-filter: blur(12px);
-  -webkit-backdrop-filter: blur(12px);
-  border: 1px solid rgba(255, 255, 255, 0.08);
-  border-radius: 10px;
+  background: rgba(8, 10, 18, 0.94) !important;
+  backdrop-filter: blur(14px);
+  border: 1px solid rgba(255, 255, 255, 0.06);
+  border-radius: 12px;
   padding: 14px 16px;
-  color: #ccc;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  min-width: 200px;
-  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.5);
+  color: #bbb;
+  font-family: 'Inter', sans-serif;
+  min-width: 210px;
+  max-height: 400px;
+  overflow-y: auto;
+  box-shadow: 0 10px 36px rgba(0, 0, 0, 0.5);
+}
+
+.ww3-legend::-webkit-scrollbar {
+  width: 3px;
+}
+
+.ww3-legend::-webkit-scrollbar-thumb {
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
 }
 
 .ww3-legend h4 {
-  margin: 0 0 12px;
-  font-size: 11px;
+  margin: 0 0 10px;
+  font-size: 10px;
   text-transform: uppercase;
   letter-spacing: 2px;
-  color: #fff;
+  color: #eee;
   display: flex;
   align-items: center;
   gap: 6px;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
   padding-bottom: 8px;
+  font-weight: 800;
 }
 
 .ww3-legend-item {
   display: flex;
   align-items: center;
   gap: 8px;
-  padding: 5px 6px;
+  padding: 4px 6px;
   border-radius: 6px;
   cursor: pointer;
   transition: all 0.2s;
-  margin-bottom: 2px;
+  margin-bottom: 1px;
 }
 
 .ww3-legend-item:hover {
-  background: rgba(255, 255, 255, 0.06);
+  background: rgba(255, 255, 255, 0.05);
 }
 
 .ww3-legend-hidden {
-  opacity: 0.35;
+  opacity: 0.3;
 }
 
 .ww3-legend-hidden .ww3-legend-color {
-  background: #555 !important;
+  background: #444 !important;
+  box-shadow: none !important;
 }
 
 .ww3-legend-color {
-  width: 12px;
-  height: 12px;
+  width: 10px;
+  height: 10px;
   border-radius: 50%;
   flex-shrink: 0;
-  box-shadow: 0 0 6px currentColor;
+  box-shadow: 0 0 8px currentColor;
 }
 
 .ww3-legend-name {
   flex: 1;
-  font-size: 11.5px;
+  font-size: 11px;
   font-weight: 500;
+  color: #ccc;
 }
 
 .ww3-legend-count {
-  font-size: 10px;
-  background: rgba(255, 255, 255, 0.1);
-  padding: 1px 7px;
+  font-size: 9px;
+  background: rgba(255, 255, 255, 0.08);
+  padding: 1px 6px;
   border-radius: 10px;
   font-weight: 700;
+  color: #aaa;
 }
 
 .ww3-legend-severity-section {
-  margin-top: 10px;
-  border-top: 1px solid rgba(255, 255, 255, 0.08);
+  margin-top: 8px;
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
   padding-top: 8px;
 }
 
@@ -369,8 +569,9 @@
   font-size: 9px;
   text-transform: uppercase;
   letter-spacing: 1.5px;
-  color: #888;
-  margin: 0 0 6px;
+  color: #666;
+  margin: 0 0 5px;
+  font-weight: 700;
 }
 
 .ww3-legend-severity {
@@ -378,36 +579,61 @@
   align-items: center;
   gap: 8px;
   font-size: 10px;
-  color: #999;
-  margin-bottom: 3px;
+  color: #888;
+  margin-bottom: 2px;
 }
 
 .ww3-legend-sev-dot {
   border-radius: 50%;
-  background: #ff4444;
+  background: #FF3D3D;
   flex-shrink: 0;
+}
+
+.ww3-legend-sev-count {
+  font-size: 9px;
+  background: rgba(255, 255, 255, 0.06);
+  padding: 1px 5px;
+  border-radius: 8px;
+  font-weight: 700;
+  color: #888;
+  margin-left: auto;
+}
+
+.ww3-legend-separator {
+  border-top: 1px solid rgba(255, 255, 255, 0.06);
+  margin: 8px 0;
+}
+
+.ww3-legend-subtitle {
+  font-size: 9px;
+  text-transform: uppercase;
+  letter-spacing: 1.5px;
+  color: #888;
+  margin: 4px 0 6px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 5px;
 }
 
 /* ---- Info Panel (Left Side) ---- */
 .ww3-info-panel {
   position: fixed;
-  top: 55px;
+  top: 48px;
   left: 0;
   width: 280px;
-  max-height: calc(100vh - 60px);
-  background: rgba(10, 13, 22, 0.94);
-  backdrop-filter: blur(14px);
-  -webkit-backdrop-filter: blur(14px);
-  border-right: 1px solid rgba(255, 255, 255, 0.06);
-  z-index: 1000;
+  max-height: calc(100vh - 48px);
+  background: rgba(8, 10, 18, 0.96);
+  backdrop-filter: blur(16px);
+  border-right: 1px solid rgba(255, 255, 255, 0.04);
+  z-index: 1500;
   overflow-y: auto;
-  font-family: 'Inter', 'Segoe UI', sans-serif;
-  box-shadow: 4px 0 20px rgba(0, 0, 0, 0.3);
-  transition: transform 0.3s ease;
+  font-family: 'Inter', sans-serif;
+  box-shadow: 4px 0 24px rgba(0, 0, 0, 0.4);
 }
 
 .ww3-info-panel::-webkit-scrollbar {
-  width: 4px;
+  width: 3px;
 }
 
 .ww3-info-panel::-webkit-scrollbar-track {
@@ -415,48 +641,49 @@
 }
 
 .ww3-info-panel::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.15);
-  border-radius: 4px;
+  background: rgba(255, 255, 255, 0.1);
+  border-radius: 3px;
 }
 
 .ww3-panel-header {
-  padding: 14px 16px;
+  padding: 12px 16px;
   display: flex;
   align-items: center;
   justify-content: space-between;
-  border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+  border-bottom: 1px solid rgba(255, 255, 255, 0.06);
   position: sticky;
   top: 0;
-  background: rgba(10, 13, 22, 0.98);
+  background: rgba(8, 10, 18, 0.98);
   z-index: 10;
 }
 
 .ww3-panel-header h3 {
-  color: #fff;
-  font-size: 12px;
+  color: #eee;
+  font-size: 11px;
   text-transform: uppercase;
-  letter-spacing: 1.5px;
+  letter-spacing: 2px;
   margin: 0;
   display: flex;
   align-items: center;
   gap: 6px;
+  font-weight: 800;
 }
 
 .ww3-panel-count {
   font-size: 10px;
-  color: #ff6b6b;
-  background: rgba(255, 107, 107, 0.15);
+  color: #FF3D3D;
+  background: rgba(255, 61, 61, 0.12);
   padding: 2px 8px;
   border-radius: 10px;
   font-weight: 700;
 }
 
 .ww3-panel-body {
-  padding: 8px 0;
+  padding: 4px 0;
 }
 
 .ww3-panel-region {
-  margin-bottom: 4px;
+  margin-bottom: 2px;
 }
 
 .ww3-panel-region-header {
@@ -464,20 +691,20 @@
   align-items: center;
   gap: 8px;
   padding: 10px 14px;
-  font-size: 11px;
-  font-weight: 700;
-  color: #fff;
+  font-size: 10px;
+  font-weight: 800;
+  color: #eee;
   text-transform: uppercase;
-  letter-spacing: 1px;
-  background: rgba(255, 255, 255, 0.03);
+  letter-spacing: 1.2px;
+  background: rgba(255, 255, 255, 0.02);
+  border-top: 1px solid rgba(255, 255, 255, 0.03);
 }
 
 .ww3-panel-region-header small {
-  display: block;
   font-size: 9px;
-  color: #777;
+  color: #555;
   font-weight: 400;
-  letter-spacing: 0.5px;
+  letter-spacing: 0.3px;
   margin-left: auto;
   text-transform: none;
 }
@@ -486,25 +713,25 @@
   display: flex;
   align-items: center;
   gap: 10px;
-  padding: 8px 14px 8px 20px;
+  padding: 7px 14px 7px 20px;
   cursor: pointer;
-  transition: all 0.2s;
+  transition: all 0.15s;
   border-left: 2px solid transparent;
 }
 
 .ww3-panel-conflict:hover {
-  background: rgba(255, 255, 255, 0.06);
-  border-left-color: var(--pulse-color, #fff);
+  background: rgba(255, 255, 255, 0.04);
+  border-left-color: rgba(255, 255, 255, 0.2);
 }
 
 .ww3-panel-sev {
-  width: 22px;
-  height: 22px;
+  width: 20px;
+  height: 20px;
   border-radius: 50%;
   display: flex;
   align-items: center;
   justify-content: center;
-  font-size: 10px;
+  font-size: 9px;
   font-weight: 900;
   color: #fff;
   flex-shrink: 0;
@@ -517,20 +744,22 @@
 
 .ww3-panel-conflict-info strong {
   display: block;
-  font-size: 11.5px;
-  color: #ddd;
+  font-size: 11px;
+  color: #ccc;
   white-space: nowrap;
   overflow: hidden;
   text-overflow: ellipsis;
+  font-weight: 600;
 }
 
 .ww3-panel-conflict-info small {
   display: block;
-  font-size: 9px;
-  color: #777;
+  font-size: 8px;
+  color: #555;
   text-transform: uppercase;
   letter-spacing: 0.5px;
-  margin-top: 2px;
+  margin-top: 1px;
+  font-weight: 500;
 }
 
 /* ---- Conflict Counter (Top Bar) ---- */
@@ -539,12 +768,13 @@
   align-items: center;
   gap: 8px;
   padding: 0 12px;
+  margin-left: auto;
 }
 
 .ww3-counter-badge {
-  font-size: 11px;
+  font-size: 10px;
   font-weight: 700;
-  padding: 4px 10px;
+  padding: 3px 10px;
   border-radius: 6px;
   display: flex;
   align-items: center;
@@ -553,13 +783,13 @@
 }
 
 .ww3-counter-total {
-  background: rgba(255, 255, 255, 0.12);
-  color: #fff;
+  background: rgba(255, 255, 255, 0.08);
+  color: #ccc;
 }
 
 .ww3-counter-critical {
-  background: rgba(255, 68, 68, 0.2);
-  color: #ff6b6b;
+  background: rgba(255, 61, 61, 0.15);
+  color: #FF5252;
   animation: ww3statusBlink 3s ease-in-out infinite;
 }
 
@@ -568,27 +798,18 @@
   transition: fill-opacity 0.3s, stroke-width 0.3s;
 }
 
-/* ---- Dark Theme Override ---- */
-.leaflet-control-attribution {
-  background: rgba(10, 13, 22, 0.8) !important;
-  color: #666 !important;
-}
-
-.leaflet-control-attribution a {
-  color: #888 !important;
-}
-
 /* ---- Responsive ---- */
 @media (max-width: 768px) {
   .ww3-info-panel {
     width: 100%;
-    max-height: 40vh;
+    max-height: 35vh;
     top: auto;
     bottom: 0;
     left: 0;
     border-right: none;
-    border-top: 1px solid rgba(255, 255, 255, 0.1);
-    transform: translateY(calc(100% - 50px));
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    transform: translateY(calc(100% - 44px));
+    transition: transform 0.3s ease;
   }
 
   .ww3-info-panel:hover,
@@ -597,11 +818,21 @@
   }
 
   .ww3-legend {
-    max-width: 180px;
+    max-width: 170px;
     font-size: 10px;
+    padding: 10px 12px;
   }
 
   .ww3-popup {
     max-width: 300px;
+  }
+
+  .navbar {
+    height: 44px !important;
+    min-height: 44px !important;
+  }
+
+  .ww3-info-panel {
+    top: auto;
   }
 }
