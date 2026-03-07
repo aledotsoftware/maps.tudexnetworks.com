@@ -19,11 +19,23 @@ class ToolbarVisibilityToggler {
     elem.id = btnId;
     elem.title = title;
     elem.style = "cursor: pointer;";
+    elem.setAttribute("role", "button");
+    elem.setAttribute("tabindex", "0");
+    elem.setAttribute("aria-label", title);
 
     const elemIcon = document.createElement("a");
     elemIcon.id = id;
     elemIcon.innerHTML = `<span id="map-toolbar-span" class="${iconClass}" aria-hidden="true"></span>`;
     elem.appendChild(elemIcon);
+
+    // Event listener for keyboard support
+    elem.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        e.stopPropagation();
+        elem.click();
+      }
+    });
 
     // Event listener to toggle visibility of map buttons on click
     elem.addEventListener("click", (e) => {
