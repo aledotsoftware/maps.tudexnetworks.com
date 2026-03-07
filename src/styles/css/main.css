@@ -1770,7 +1770,7 @@ input:checked.switch+label:after {
 
 /* Special effects */
 /* Spinning globe effect when hover on 'zoom to home' button */
-/* @keyframes spinning-globe {
+@keyframes spinning-globe {
   0% {
     content: "\f57d";
   }
@@ -1789,7 +1789,7 @@ input:checked.switch+label:after {
   content    : "\f57d";
   animation  : spinning-globe 0.5s linear infinite alternate;
   opacity    : 0.95;
-} */
+}
 /* mayth4th */
 /* 
 @keyframes maythe4th {

@@ -368,7 +368,7 @@ $("body").on("pluginLoad", function (event, plugin) {
 
           // Change icon on hover to 'fa fa-home' using CSS classes
           zoomHomeIcon.classList.add("zoom-home-icon");
-          zoomHomeIcon.innerHTML = `<i class="fas fa-home"></i><span class="zoom-home-text">${mapa.getZoom()}</span>`;
+          zoomHomeIcon.innerHTML = `<i class="fa-solid fa-earth-americas"></i><span class="zoom-home-text">${mapa.getZoom()}</span>`;
 
           // Update zoom level displayed on zoom end
           mapa.on("zoomend", () => {
