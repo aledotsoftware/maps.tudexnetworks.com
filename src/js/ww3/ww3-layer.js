@@ -33,11 +33,17 @@ const WW3Layer = {
 
   init: function (map) {
     this.map = map;
-    this.layerGroup = L.layerGroup().addTo(map);
-    this._renderTheaters();
-    this._renderConnectionLines();
-    this._renderConflictMarkers();
-    this._addLegend();
+    if (this.map.isGlobe) {
+      this._renderTheatersCesium();
+      this._renderConnectionLinesCesium();
+      this._renderConflictMarkersCesium();
+    } else {
+      this.layerGroup = L.layerGroup().addTo(map);
+      this._renderTheaters();
+      this._renderConnectionLines();
+      this._renderConflictMarkers();
+      this._addLegend();
+    }
     this._addInfoPanel();
     this._addTopBarCounter();
   },
@@ -160,28 +166,6 @@ const WW3Layer = {
         dashArray: '5, 6', className: 'ww3-connection-line'
       });
 
-      // Popup with description on click
-      if (conn.desc) {
-        const fromName = from.name;
-        const toName = to.name;
-        const popupHtml = `
-          <div class="ww3-conn-popup">
-            <div class="ww3-conn-popup-header">
-              <i class="fa-solid fa-link"></i> ${conn.label}
-            </div>
-            <div class="ww3-conn-popup-endpoints">
-              <span class="ww3-conn-from" onclick="WW3Layer.flyToConflict('${conn.from}')">${fromName}</span>
-              <i class="fa-solid fa-arrows-left-right"></i>
-              <span class="ww3-conn-to" onclick="WW3Layer.flyToConflict('${conn.to}')">${toName}</span>
-            </div>
-            <p class="ww3-conn-popup-desc">${conn.desc}</p>
-          </div>
-        `;
-        line.bindPopup(popupHtml, {
-          maxWidth: 380, minWidth: 280, className: 'ww3-popup-container ww3-conn-popup-container'
-        });
-      }
-
       // Hover effect
       line.on('mouseover', function () {
         this.setStyle({ opacity: 0.8, weight: 3, color: '#90CAF9' });
@@ -226,24 +210,95 @@ const WW3Layer = {
   },
 
   _highlightTheater: function (conflictId) {
-    Object.values(this.theaterLayers).forEach(p =>
-      p.setStyle({ fillOpacity: 0.06, weight: 1.2, opacity: 0.4 })
-    );
-    if (this.theaterLayers[conflictId]) {
+    Object.values(this.theaterLayers).forEach(p => {
+      if (p.setStyle) p.setStyle({ fillOpacity: 0.06, weight: 1.2, opacity: 0.4 });
+    });
+    if (this.theaterLayers[conflictId] && this.theaterLayers[conflictId].setStyle) {
       this.theaterLayers[conflictId].setStyle({ fillOpacity: 0.2, weight: 2.5, opacity: 1 });
     }
+  },
+
+  _renderTheatersCesium: function () {
+    WW3_CONFLICTS.forEach(conflict => {
+      if (!conflict.theater) return;
+      const sevColor = this._getSeverityColor(conflict.severity);
+      const hierarchy = conflict.theater.map(p => Cesium.Cartesian3.fromDegrees(p[1], p[0]));
+
+      this.theaterLayers[conflict.id] = this.map.entities.add({
+        name: conflict.name,
+        polygon: {
+          hierarchy: new Cesium.PolygonHierarchy(hierarchy),
+          material: Cesium.Color.fromCssColorString(sevColor).withAlpha(0.1),
+          outline: true,
+          outlineColor: Cesium.Color.fromCssColorString(sevColor),
+          outlineWidth: 2
+        }
+      });
+    });
+  },
+
+  _renderConnectionLinesCesium: function () {
+    WW3_CONNECTIONS.forEach(conn => {
+      const from = WW3_CONFLICTS.find(c => c.id === conn.from);
+      const to = WW3_CONFLICTS.find(c => c.id === conn.to);
+      if (!from || !to) return;
+
+      this.map.entities.add({
+        polyline: {
+          positions: Cesium.Cartesian3.fromDegreesArray([
+            from.point[1], from.point[0],
+            to.point[1], to.point[0]
+          ]),
+          width: 2,
+          material: new Cesium.PolylineDashMaterialProperty({
+            color: Cesium.Color.fromCssColorString('#62B1F6').withAlpha(0.5)
+          })
+        }
+      });
+    });
+  },
+
+  _renderConflictMarkersCesium: function () {
+    WW3_CONFLICTS.forEach(conflict => {
+      const sevColor = this._getSeverityColor(conflict.severity);
+      const point = Cesium.Cartesian3.fromDegrees(conflict.point[1], conflict.point[0]);
+
+      this.conflictLayers[conflict.id] = this.map.entities.add({
+        position: point,
+        point: {
+          pixelSize: this.SEVERITY_PULSE_SIZE[conflict.severity],
+          color: Cesium.Color.fromCssColorString(sevColor),
+          outlineColor: Cesium.Color.WHITE,
+          outlineWidth: 2
+        },
+        label: {
+          text: conflict.name,
+          font: '14px Inter, sans-serif',
+          style: Cesium.LabelStyle.FILL_AND_OUTLINE,
+          outlineWidth: 2,
+          verticalOrigin: Cesium.VerticalOrigin.BOTTOM,
+          pixelOffset: new Cesium.Cartesian2(0, -20)
+        }
+      });
+    });
   },
 
   flyToConflict: function (conflictId) {
     const conflict = WW3_CONFLICTS.find(c => c.id === conflictId);
     if (!conflict) return;
-    this.map.flyTo(conflict.point, 5, { duration: 1.2 });
-    setTimeout(() => {
-      if (this.conflictLayers[conflictId]) {
-        this.conflictLayers[conflictId].openPopup();
-        this._highlightTheater(conflictId);
-      }
-    }, 1300);
+    if (this.map.isGlobe) {
+      this.map.camera.flyTo({
+        destination: Cesium.Cartesian3.fromDegrees(conflict.point[1], conflict.point[0], 5000000)
+      });
+    } else {
+      this.map.flyTo(conflict.point, 5, { duration: 1.2 });
+      setTimeout(() => {
+        if (this.conflictLayers[conflictId]) {
+          this.conflictLayers[conflictId].openPopup();
+          this._highlightTheater(conflictId);
+        }
+      }, 1300);
+    }
   },
 
   _addLegend: function () {
@@ -377,7 +432,7 @@ const WW3Layer = {
 
 // Auto-init
 const ww3InitInterval = setInterval(() => {
-  if (typeof mapa !== 'undefined' && mapa && mapa.hasOwnProperty('_leaflet_id')) {
+  if (typeof mapa !== 'undefined' && mapa && (mapa.hasOwnProperty('_leaflet_id') || mapa.isGlobe)) {
     clearInterval(ww3InitInterval);
     setTimeout(() => WW3Layer.init(mapa), 2000);
   }

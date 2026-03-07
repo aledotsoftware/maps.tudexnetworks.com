@@ -703,12 +703,12 @@ $("body").on("pluginLoad", function (event, plugin) {
                 //to disallow editing in geoprocesses
                 this._backupLayer(o),
                   this.options.poly &&
-                ((i = L.Util.extend({}, this.options.poly)),
+                  ((i = L.Util.extend({}, this.options.poly)),
                     (o.options.poly = i)),
                   this.options.selectedPathOptions &&
-                ((e = L.Util.extend({}, this.options.selectedPathOptions)),
+                  ((e = L.Util.extend({}, this.options.selectedPathOptions)),
                     e.maintainColor &&
-                ((e.color = o.options.color),
+                    ((e.color = o.options.color),
                       (e.fillColor = o.options.fillColor)),
                     (o.options.original = L.extend({}, o.options)),
                     (o.options.editing = e)),
@@ -3101,6 +3101,7 @@ $("body").on("pluginLoad", function (event, plugin) {
             ? selectedBasemap.zoom.nativeMax
             : DEFAULT_MAX_NATIVE_ZOOM_LEVEL,
           attribution: selectedBasemap.attribution,
+          ...(selectedBasemap.hasOwnProperty("subdomains") && { subdomains: selectedBasemap.subdomains })
         });
       }
 
@@ -3108,25 +3109,55 @@ $("body").on("pluginLoad", function (event, plugin) {
        * @worldCopyJump solves the no repeating layers when map is dragged crossing 
        * the antimeridian to another new map
        */
-      mapa = new L.map("mapa", {
-        center: app.hasOwnProperty("mapConfig")
-          ? [app.mapConfig.center.latitude, app.mapConfig.center.longitude]
-          : [DEFAULT_LATITUDE, DEFAULT_LONGITUDE],
-        zoom: app.hasOwnProperty("mapConfig")
-          ? app.mapConfig.zoom.initial
-          : DEFAULT_ZOOM_LEVEL,
-        layers: currentBaseMap ? [currentBaseMap] : undefined,
-        zoomControl: false,
-        minZoom: app.hasOwnProperty("mapConfig")
-          ? app.mapConfig.zoom.min
-          : DEFAULT_MIN_ZOOM_LEVEL,
-        maxZoom: app.hasOwnProperty("mapConfig")
-          ? app.mapConfig.zoom.max
-          : DEFAULT_MAX_ZOOM_LEVEL,
-        closePopupOnClick: false,
-        worldCopyJump: true
-        /* renderer: L.svg() */
-      });
+      if (app.mapConfig && app.mapConfig.globeMode) {
+        // Initialize Cesium Globe
+        mapa = new Cesium.Viewer('mapa', {
+          imageryProvider: new Cesium.OpenStreetMapImageryProvider({
+            url: selectedBasemap.host.replace('{s}', 'a').replace('{z}', '{z}').replace('{x}', '{x}').replace('{y}', '{y}')
+          }),
+          baseLayerPicker: false,
+          geocoder: false,
+          homeButton: false,
+          infoBox: false,
+          sceneModePicker: true,
+          selectionIndicator: false,
+          navigationHelpButton: false,
+          timeline: false,
+          animation: false,
+          fullscreenButton: false
+        });
+        mapa.isGlobe = true;
+        // Mocking some Leaflet methods for compatibility
+        mapa.setView = (point, zoom) => {
+          mapa.camera.flyTo({
+            destination: Cesium.Cartesian3.fromDegrees(point[1], point[0], 10000000 / (zoom || 2))
+          });
+        };
+        mapa.flyTo = mapa.setView;
+        mapa.getZoom = () => 3; // Static mock
+        mapa.on = () => { }; // Mock event listener
+        mapa.removeControl = () => { };
+      } else {
+        mapa = new L.map("mapa", {
+          center: app.hasOwnProperty("mapConfig")
+            ? [app.mapConfig.center.latitude, app.mapConfig.center.longitude]
+            : [DEFAULT_LATITUDE, DEFAULT_LONGITUDE],
+          zoom: app.hasOwnProperty("mapConfig")
+            ? app.mapConfig.zoom.initial
+            : DEFAULT_ZOOM_LEVEL,
+          layers: currentBaseMap ? [currentBaseMap] : undefined,
+          zoomControl: false,
+          minZoom: app.hasOwnProperty("mapConfig")
+            ? app.mapConfig.zoom.min
+            : DEFAULT_MIN_ZOOM_LEVEL,
+          maxZoom: app.hasOwnProperty("mapConfig")
+            ? app.mapConfig.zoom.max
+            : DEFAULT_MAX_ZOOM_LEVEL,
+          closePopupOnClick: false,
+          worldCopyJump: true
+          /* renderer: L.svg() */
+        });
+      }
 
       //Available events
       mapa.methodsEvents = {
