@@ -23,14 +23,26 @@ class AboutUsModal {
     const aboutExitBtn = document.createElement("a");
     aboutExitBtn.id = "aboutExitBtn";
     aboutExitBtn.classList = "about-exit";
-    aboutExitBtn.innerHTML = '<i class="fa fa-times"></i>';
-    aboutExitBtn.onclick = () => {
+    aboutExitBtn.setAttribute("role", "button");
+    aboutExitBtn.setAttribute("tabindex", "0");
+    aboutExitBtn.setAttribute("aria-label", "Cerrar modal Acerca de");
+    aboutExitBtn.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>';
+
+    const closeAboutUsModal = () => {
       const notiDots = document.querySelectorAll(".notification-dot");
       notiDots.forEach((dot) => {
         dot.remove();
       });
       principalContainer.remove();
       this.isVisible = false;
+    };
+
+    aboutExitBtn.onclick = closeAboutUsModal;
+    aboutExitBtn.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        closeAboutUsModal();
+      }
     };
 
     const aboutMainSection = document.createElement("div");
