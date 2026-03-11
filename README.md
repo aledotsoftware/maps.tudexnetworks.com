@@ -1,8 +1,5 @@
 
-<img width="256" src="src/styles/images/argenmap-banner.png" alt="Maps Tudex" />
-
 ---
-[English version][README_en]
 
 # Maps Tudex
 
