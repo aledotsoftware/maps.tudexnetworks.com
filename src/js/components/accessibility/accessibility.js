@@ -235,6 +235,8 @@ class Accessibility {
     const button = this.createElement("div", `${id}-btn`, "ag-btn ag-btn-secondary accessibility-btn");
     button.setAttribute("title", title);
     button.setAttribute("aria-label", title);
+    button.setAttribute("role", "button");
+    button.setAttribute("tabindex", "0");
 
     // Create and append the icon element
     const iconElement = this.createElement("i", `${id}-icon`, `${icon} accessibility-icon`);
@@ -247,6 +249,14 @@ class Accessibility {
 
     // Attach the click event listener
     button.addEventListener("click", action);
+
+    // Attach keyboard event listener for accessibility
+    button.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        action(e);
+      }
+    });
 
     return button;
   }
