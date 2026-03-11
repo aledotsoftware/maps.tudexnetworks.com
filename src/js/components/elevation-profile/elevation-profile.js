@@ -251,9 +251,12 @@ class IElevationProfile {
       let btnclose = document.createElement("a");
       btnclose.id = "btnclose-wrapper";
       btnclose.className = "icon-modalfile";
+      btnclose.setAttribute("role", "button");
+      btnclose.setAttribute("tabindex", "0");
+      btnclose.setAttribute("aria-label", "Cerrar");
       btnclose.innerHTML =
         '<i title="Cerrar" class="fa fa-times icon_close_mf" aria-hidden="true"></i>';
-      btnclose.onclick = () => {
+      const closeAction = () => {
         hideAllElevationProfile();
         let idElevProfile =
             document.getElementById("elevationProfile").children[1].id,
@@ -265,6 +268,13 @@ class IElevationProfile {
         });
         updateNumberofLayers(section);
         showTotalNumberofLayers();
+      };
+      btnclose.onclick = closeAction;
+      btnclose.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          closeAction();
+        }
       };
       s_sec.append(btnclose);
 
