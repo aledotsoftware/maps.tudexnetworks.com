@@ -1,24 +1,48 @@
 
-<img width="256" src="src/styles/images/argenmap-banner.png" alt="Argenmap" />
+<img width="256" src="src/styles/images/argenmap-banner.png" alt="Maps Tudex" />
 
 ---
 [English version][README_en]
 
-Argenmap es un visor de mapas desarrollado por el [Instituto Geográfico Nacional][] de licencia libre que permite mostrar mapas base, capas superpuestas, consultar y crear datos.
+# Maps Tudex
 
-Está basado en [Leaflet][] y para funcionar sólo requiere ser publicado con un servidor web. A partir de un archivo de configuración en formato JSON genera un panel lateral con todas las capas publicadas.
+**Maps Tudex** es un visor de mapas soberano desarrollado por [Tudex Networks][], de código abierto y sin dependencias de terceros propietarios. Permite visualizar, consultar y publicar cualquier información geoetiquetada de forma autónoma.
 
-Las capas se agrupan en el panel en secciones que son definidas en el archivo de configuración.
+Está diseñado como una alternativa soberana a Google Maps: cualquier organización o individuo puede desplegarlo en su propia infraestructura y mostrarlo sin depender de servicios externos.
 
-Incluye por defecto con el mapa base de la República Argentina y se pueden agregar otros.
+## ¿Qué hace Maps Tudex?
+
+- 🗺️ **Muestra mapas base** desde servidores de teselas propios o de terceros (OSM, etc.)
+- 📌 **Visualiza cualquier información geoetiquetada**: puntos, polígonos, rutas, servicios WMS/WMTS, archivos GeoJSON, y más
+- 🔍 **Consulta datos espaciales** directamente desde el mapa
+- 🧩 **Extensible mediante capas y plugins**: configurable vía JSON sin tocar código
+- 🔒 **Soberanía total**: sin telemetría, sin dependencias de Google o servicios cloud propietarios
+- 🚀 **Ligero y autónomo**: basado en [Leaflet][], sólo requiere un servidor web para funcionar
+
+## Casos de uso
+
+- Visualización de datos geográficos institucionales
+- Mapas internos de infraestructura de red
+- Portales de datos abiertos geoespaciales
+- Alternativa soberana a Google Maps para organizaciones
 
 ## Documentación
-- Guía rápida de [instalación][]
-- [Configurar][] capas, mapas base, estilos
+
+- Guía rápida de [instalación][instalación]
+- [Configurar][] capas, mapas base y estilos
 - [Funcionalidades][]
 - [Colaborar][] con el desarrollo
 
-[Instituto Geográfico Nacional]: https://www.ign.gob.ar
+## Stack
+
+- [Leaflet][] — motor de renderizado de mapas
+- Servidores de teselas OGC-compatibles (WMS, WMTS, TileJSON)
+- Configuración declarativa en JSON
+- Sin frameworks pesados, sin dependencias propietarias
+
+---
+
+[Tudex Networks]: https://tudexnetworks.com
 [Leaflet]: https://leafletjs.com/
 [README_en]: src/docs/en/README.md
 [instalación]: src/docs/deployment.md
