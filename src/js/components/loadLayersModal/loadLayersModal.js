@@ -3,8 +3,8 @@ var LOAD_LAYERS_MODAL_OPEN = false;
 class LoadLayersModal {
   constructor() {
     this.component = `
-        <a id="loadLayersButtonContent" class="center-flex" onClick=modal.open()>
-            <img src="src/js/components/loadLayersModal/add-layers-icon.svg" width="17" height="17" alt="Agregar capas">
+        <a id="loadLayersButtonContent" class="center-flex" role="button" tabindex="0" aria-label="Agregar capas">
+            <img src="src/js/components/loadLayersModal/add-layers-icon.svg" width="17" height="17" alt="">
         </a>
     `;
   }
@@ -14,6 +14,18 @@ class LoadLayersModal {
     elem.id = "loadLayersButton";
     elem.title = "Agregar capas";
     elem.innerHTML = this.component;
+
+    const btn = elem.querySelector('#loadLayersButtonContent');
+    if (btn) {
+      btn.onclick = () => modal.open();
+      btn.onkeydown = (e) => {
+        if (e.key === "Enter" || e.key === " ") {
+          e.preventDefault();
+          modal.open();
+        }
+      };
+    }
+
     if (loadAddLayer) {
       document.querySelector(".leaflet-top.leaflet-left").append(elem);
     }
@@ -85,7 +97,9 @@ class modalUI {
     this.actions.forEach((action, i) => {
       let btn = document.createElement("button");
       if (action.icon && action.icon.length) {
-        btn.innerHTML = `<i class="${action.icon}"></i>`;
+        btn.innerHTML = `<i class="${action.icon}" aria-hidden="true"></i>`;
+        btn.setAttribute("aria-label", action.name);
+        btn.setAttribute("title", action.name);
       } else {
         btn.innerText = action.name;
       }
