@@ -54,7 +54,9 @@ mainPopup = function () {
       let popupExitBtn = document.createElement("button");
       popupExitBtn.id = "popupExitBtn";
       popupExitBtn.classList = "exit-btn";
-      popupExitBtn.innerHTML ='<i class="fa fa-times"></i>';
+      popupExitBtn.setAttribute("aria-label", "Cerrar ventana emergente");
+      popupExitBtn.setAttribute("title", "Cerrar ventana emergente");
+      popupExitBtn.innerHTML ='<i class="fa fa-times" aria-hidden="true"></i>';
       popupExitBtn.onclick = () => {
         mainWrapper.remove();
         document.getElementById("main-popup").remove();
