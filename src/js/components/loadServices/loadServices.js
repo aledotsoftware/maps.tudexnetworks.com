@@ -97,6 +97,8 @@ class ModalService {
         editButton.classList.add("fas");
         editButton.classList.add("fa-pen-square");
         editButton.setAttribute("id", `title-edit-${serviceID}`);
+        editButton.setAttribute("aria-label", "Editar título");
+        editButton.setAttribute("title", "Editar título");
         editButton.onclick = function (event) {
           editServiceTitle(serviceID, event);
         };
@@ -105,6 +107,8 @@ class ModalService {
         saveButton.classList.add("fas");
         saveButton.classList.add("fa-save");
         saveButton.setAttribute("id", `title-save-${serviceID}`);
+        saveButton.setAttribute("aria-label", "Guardar título");
+        saveButton.setAttribute("title", "Guardar título");
         saveButton.onclick = function (event) {
           saveServiceTitle(serviceID, event);
         };
@@ -250,6 +254,8 @@ async function handleURLInput(e) {
       editButton.classList.add("fas");
       editButton.classList.add("fa-pen-square");
       editButton.setAttribute("id", `title-edit-${serviceID}`);
+      editButton.setAttribute("aria-label", "Editar título");
+      editButton.setAttribute("title", "Editar título");
       editButton.onclick = function (event) {
         editServiceTitle(serviceID, event);
       };
@@ -258,6 +264,8 @@ async function handleURLInput(e) {
       saveButton.classList.add("fas");
       saveButton.classList.add("fa-save");
       saveButton.setAttribute("id", `title-save-${serviceID}`);
+      saveButton.setAttribute("aria-label", "Guardar título");
+      saveButton.setAttribute("title", "Guardar título");
       saveButton.onclick = function (event) {
         saveServiceTitle(serviceID, event);
       };
@@ -372,6 +380,8 @@ function saveServiceTitle(serviceID, event) {
   editButton.classList.add("fas");
   editButton.classList.add("fa-pen-square");
   editButton.setAttribute("id", `title-edit-${serviceID}`);
+  editButton.setAttribute("aria-label", "Editar título");
+  editButton.setAttribute("title", "Editar título");
   editButton.onclick = function (event) {
     editServiceTitle(serviceID, event);
   };
