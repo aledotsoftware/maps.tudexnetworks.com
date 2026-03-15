@@ -67,6 +67,7 @@ class Searchbar_UI {
     input.placeholder = sb_strings.placeholder || "Search places...";
     input.spellcheck = false;
     input.autocomplete = "address-level1"; // Avoids autocomplete. Based on HTML attribute: autocomplete in MDN Web Docs page
+    input.setAttribute("aria-label", sb_strings.placeholder || "Search places...");
 
     let icon = document.createElement("button");
     icon.id = "div-icon-close-searchbar";

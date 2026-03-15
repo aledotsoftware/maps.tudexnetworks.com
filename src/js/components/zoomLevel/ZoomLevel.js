@@ -28,6 +28,7 @@ class ZoomLevel {
 
         const iconContainer = document.createElement('a');
         iconContainer.id = 'icon-container';
+        iconContainer.setAttribute('aria-label', 'Zoom');
 
         const zoomIcon = document.createElement('i');
         zoomIcon.classList = 'fa fa-search-plus';
