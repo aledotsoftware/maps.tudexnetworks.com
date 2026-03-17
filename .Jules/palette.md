@@ -6,3 +6,7 @@
 ## 2024-05-18 - Dynamically rendered icon-only buttons
 **Learning:** Icon-only buttons rendered dynamically through JavaScript often lack text context. When mapping over configurations to render buttons with icons (`<i class="..."></i>`), screen readers receive empty context unless `aria-label` or `title` is explicitly set and the decorative icon is hidden using `aria-hidden="true"`.
 **Action:** When dynamically constructing `<button>` elements that only display an icon, always add `aria-label` (and optionally `title` for tooltip support) using the object's `name` or `label` property, and apply `aria-hidden="true"` to the inner `<i>` or `<img>` element.
+
+## 2024-06-18 - Screen reader announcements on nested elements
+**Learning:** Adding `aria-label` to decorative elements like `<i>` inside an already accessible interactive parent container (like `<button aria-label="...">`) causes redundant and confusing announcements for screen reader users. The screen reader will announce the parent's label and then the child's label.
+**Action:** When an interactive element has a descriptive `aria-label`, inner decorative elements (like icons) must use `aria-hidden="true"` instead of `aria-label` to prevent double announcements.
