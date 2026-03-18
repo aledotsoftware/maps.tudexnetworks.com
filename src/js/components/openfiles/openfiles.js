@@ -53,14 +53,24 @@ class UImf {
     let btnclose = document.createElement("a");
     btnclose.id = "btnclose-icon-modalfile";
     btnclose.className = "icon-modalfile";
+    btnclose.setAttribute("role", "button");
+    btnclose.setAttribute("tabindex", "0");
+    btnclose.setAttribute("aria-label", "Cerrar modal");
     btnclose.innerHTML =
       '<i title="cerrar" class="fa fa-times icon_close_mf" aria-hidden="true"></i>';
-    btnclose.onclick = function () {
+    const closeAction = function () {
       document.body.removeChild(modalOpenFile);
       document.getElementById("iconopenfile-container").disabled = false;
       document.getElementById("modalgeojson").style.color = "black";
       open = false;
       currentLayers = [];
+    };
+    btnclose.onclick = closeAction;
+    btnclose.onkeydown = function(e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        closeAction();
+      }
     };
     s_sec.append(btnclose);
 
@@ -87,6 +97,9 @@ class UImf {
     let divaux = document.createElement("div");
     divaux.id = "logo_upload_container";
     divaux.className = "upload";
+    divaux.setAttribute("role", "button");
+    divaux.setAttribute("tabindex", "0");
+    divaux.setAttribute("aria-label", "Abrir archivo");
 
     let main_inputfile = document.createElement("input");
     main_inputfile.accept = ".txt,.json,.geojson,.wkt,.kml,.zip,.gpx";
@@ -169,6 +182,7 @@ class UImf {
     let faicon = document.createElement("i");
     faicon.id = "logo_up";
     faicon.className = "fas fa-file-circle-plus";
+    faicon.setAttribute("aria-hidden", "true");
 
     let ptitle = document.createElement("p");
     ptitle.innerHTML = "Abrir Archivo";
@@ -176,9 +190,16 @@ class UImf {
     divaux.append(main_inputfile);
     divaux.append(faicon);
     divaux.append(ptitle);
-    divaux.onclick = function () {
+    const triggerUpload = function () {
       let aux = document.getElementById("input_uploadfile");
       aux.click();
+    };
+    divaux.onclick = triggerUpload;
+    divaux.onkeydown = function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        triggerUpload();
+      }
     };
 
     logo_upload.append(divaux);
@@ -380,11 +401,21 @@ class UImf {
     content_upload.append(div_details);
 
     let icon_file = document.createElement("div");
+    icon_file.setAttribute("role", "button");
+    icon_file.setAttribute("tabindex", "0");
+    icon_file.setAttribute("aria-label", "Eliminar archivo");
     icon_file.innerHTML =
-      '<i style="width: 10%;" title="eliminar archivo" class="fa fa-times-circle"></i>';
-    icon_file.onclick = function () {
+      '<i style="width: 10%;" title="eliminar archivo" class="fa fa-times-circle" aria-hidden="true"></i>';
+    const deleteAction = function () {
       $("#" + id_item).remove();
       currentLayers.splice(del_index, 1);
+    };
+    icon_file.onclick = deleteAction;
+    icon_file.onkeydown = function(e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        deleteAction();
+      }
     };
 
     content_upload.append(icon_file);
