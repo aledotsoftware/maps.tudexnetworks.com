@@ -235,13 +235,13 @@ function showTotalNumberofLayers() {
 
   if (activeLayers > 0) {
     $("#cleanTrash").html(
-      "<div class='glyphicon glyphicon-refresh'></div>" +
+      "<div class='glyphicon glyphicon-refresh' aria-hidden='true'></div>" +
       "<span class='total-active-layers-counter'>" +
       activeLayers +
       "</span>",
     );
   } else {
-    $("#cleanTrash").html("<span class='glyphicon glyphicon-refresh'></span>");
+    $("#cleanTrash").html("<span class='glyphicon glyphicon-refresh' aria-hidden='true'></span>");
   }
 }
 
