@@ -10,3 +10,6 @@
 ## 2024-06-18 - Screen reader announcements on nested elements
 **Learning:** Adding `aria-label` to decorative elements like `<i>` inside an already accessible interactive parent container (like `<button aria-label="...">`) causes redundant and confusing announcements for screen reader users. The screen reader will announce the parent's label and then the child's label.
 **Action:** When an interactive element has a descriptive `aria-label`, inner decorative elements (like icons) must use `aria-hidden="true"` instead of `aria-label` to prevent double announcements.
+## 2026-03-23 - Added dynamic aria-expanded state to custom toggle buttons
+**Learning:** Custom vanilla JS controls that function as toggles (e.g., activating map modes, accessibility options) require their `aria-expanded` attribute to be dynamically updated ('true'/'false') in the JavaScript handler functions to accurately reflect the active state to screen readers.
+**Action:** When adding or modifying custom toggle controls, always ensure the `aria-expanded` state is programmatically updated when the component's visibility or active state changes.
