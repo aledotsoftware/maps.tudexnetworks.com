@@ -5,8 +5,8 @@ class ConsultData {
     // Initialize the HTML component for the control
     this.component = `
       <div id="iconCD-container" class="leaflet-disabled" title="Consultar Datos">
-        <a id="iconCD" aria-hidden="true">
-          <img src="src/styles/images/cursorQuery.png" width="60%">
+        <a id="iconCD" role="button" tabindex="0" aria-label="Consultar Datos" aria-pressed="false">
+          <img src="src/styles/images/cursorQuery.png" width="60%" aria-hidden="true">
         </a>
       </div>
     `;
@@ -25,6 +25,15 @@ class ConsultData {
     elem.onclick = (e) => {
       e.stopPropagation(); // Prevent click event propagation
       activateDataConsult(); // Trigger the data consultation activation
+    };
+
+    // Attach keydown event listener for keyboard accessibility
+    elem.onkeydown = (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        e.stopPropagation();
+        activateDataConsult();
+      }
     };
 
     // Only append the control if loadQueryLayer is true
@@ -47,6 +56,7 @@ function toggleConsultList() {
  */
 function activateDataConsult() {
   const control = document.getElementById("iconCD");
+  const controlContainer = document.getElementById("iconCD-container");
 
   // Toggle the active state for all editable layers
   Object.values(mapa.editableLayers).forEach((editLayer) => {
@@ -61,12 +71,14 @@ function activateDataConsult() {
   map.classList.toggle("leaflet-grabbing");
 
   if (consultDataBtnClose) {
-    control.style.backgroundColor = "#33b560";
+    if (controlContainer) controlContainer.style.backgroundColor = "#33b560";
     control.querySelector("img").style.filter = "invert()";
+    control.setAttribute("aria-pressed", "true");
     getPopupForWMS(true); // Enable WMS popups
   } else {
-    control.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+    if (controlContainer) controlContainer.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
     control.querySelector("img").style.removeProperty("filter");
+    control.setAttribute("aria-pressed", "false");
     getPopupForWMS(false); // Disable WMS popups
   }
 
