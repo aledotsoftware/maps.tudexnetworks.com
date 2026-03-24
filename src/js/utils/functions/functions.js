@@ -235,13 +235,13 @@ function showTotalNumberofLayers() {
 
   if (activeLayers > 0) {
     $("#cleanTrash").html(
-      "<div class='glyphicon glyphicon-refresh'></div>" +
+      "<div class='glyphicon glyphicon-refresh' aria-hidden='true'></div>" +
       "<span class='total-active-layers-counter'>" +
       activeLayers +
       "</span>",
     );
   } else {
-    $("#cleanTrash").html("<span class='glyphicon glyphicon-refresh'></span>");
+    $("#cleanTrash").html("<span class='glyphicon glyphicon-refresh' aria-hidden='true'></span>");
   }
 }
 
@@ -1927,6 +1927,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (targetSection.style.display === "block") {
         targetSection.style.display = "none";
+        button.setAttribute("aria-expanded", "false");
       } else {
         // Oculta todas las secciones antes de mostrar la deseada
         buttons.forEach(function (otherButton) {
@@ -1935,10 +1936,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
           if (otherTargetSection !== targetSection) {
             otherTargetSection.style.display = "none";
+            otherButton.setAttribute("aria-expanded", "false");
           }
         });
 
         targetSection.style.display = "block";
+        button.setAttribute("aria-expanded", "true");
       }
       event.stopPropagation();
     });
@@ -1951,6 +1954,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var targetId = button.getAttribute("data-target");
         var targetSection = document.getElementById(targetId);
         targetSection.style.display = "none";
+        button.setAttribute("aria-expanded", "false");
       });
     }
   });

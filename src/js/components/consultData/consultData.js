@@ -57,6 +57,7 @@ function toggleConsultList() {
  */
 function activateDataConsult() {
   const control = document.getElementById("iconCD");
+  const controlContainer = document.getElementById("iconCD-container");
 
   // Toggle the active state for all editable layers
   Object.values(mapa.editableLayers).forEach((editLayer) => {
@@ -71,12 +72,12 @@ function activateDataConsult() {
   map.classList.toggle("leaflet-grabbing");
 
   if (consultDataBtnClose) {
-    control.style.backgroundColor = "#33b560";
+    if (controlContainer) controlContainer.style.backgroundColor = "#33b560";
     control.querySelector("img").style.filter = "invert()";
     control.setAttribute("aria-pressed", "true");
     getPopupForWMS(true); // Enable WMS popups
   } else {
-    control.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
+    if (controlContainer) controlContainer.style.backgroundColor = "rgba(255, 255, 255, 0.9)";
     control.querySelector("img").style.removeProperty("filter");
     control.setAttribute("aria-pressed", "false");
     getPopupForWMS(false); // Disable WMS popups
