@@ -2746,12 +2746,12 @@ class GestorMenu {
               <input type='text' class='form-control ag-input-text' id='q' name='q' value='${this.getQuerySearch()}' placeholder='Buscar capa'>
               <button onClick='reloadMenu()' class='ag-btn ag-btn-secondary btn-reset-layers form-control-clear glyphicon glyphicon-remove-circle form-control-feedback hidden'></button>
             </div>
-            <button class='ag-btn ag-btn-secondary btn-search' type='submit'>
+            <button class='ag-btn ag-btn-secondary btn-search' type='submit' title='Buscar capa' aria-label='Buscar capa'>
             <span class='glyphicon glyphicon-search' aria-hidden='true'></span>
             </button>
-            <button class='ag-btn ag-btn-secondary btn-search' id='cleanTrash' type='button' onClick='gestorMenu.cleanAllLayers()' title='Desactivar capas'></button>
-            <button class='ag-btn ag-btn-secondary btn-search' id='menuPined' type='button' onClick='gestorMenu._menuFixed()' title='Fijar menú de capas'>
-            <span class='glyphicon glyphicon-pushpin'></span>
+            <button class='ag-btn ag-btn-secondary btn-search' id='cleanTrash' type='button' onClick='gestorMenu.cleanAllLayers()' title='Desactivar capas' aria-label='Desactivar capas'></button>
+            <button class='ag-btn ag-btn-secondary btn-search' id='menuPined' type='button' onClick='gestorMenu._menuFixed()' title='Fijar menú de capas' aria-label='Fijar menú de capas'>
+            <span class='glyphicon glyphicon-pushpin' aria-hidden='true'></span>
             </button>
           </div>
         </form>`;
