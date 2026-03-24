@@ -237,6 +237,7 @@ class Accessibility {
     button.setAttribute("aria-label", title);
     button.setAttribute("role", "button");
     button.setAttribute("tabindex", "0");
+    button.setAttribute("aria-pressed", "false");
 
     // Create and append the icon element
     const iconElement = this.createElement("i", `${id}-icon`, `${icon} accessibility-icon`);
@@ -304,6 +305,7 @@ class Accessibility {
     // Update button appearance based on the current font size state
     fontSizeButton.classList.toggle('ag-btn-secondary', btnClass === 'ag-btn-secondary');
     fontSizeButton.classList.toggle('ag-btn-confirm', btnClass === 'ag-btn-confirm');
+    fontSizeButton.setAttribute('aria-pressed', btnClass === 'ag-btn-confirm' ? 'true' : 'false');
 
     // Cycle the font size state to the next option
     this.fontSizeState = (this.fontSizeState + 1) % fontSizeOptions.length;
@@ -324,6 +326,7 @@ class Accessibility {
 
     fontSizeButton.classList.remove('ag-btn-confirm');
     fontSizeButton.classList.add('ag-btn-secondary');
+    fontSizeButton.setAttribute('aria-pressed', 'false');
     fontSizeTitle.title = "Tamaño de fuente";
     fontSizeTitle.textContent = "Tamaño de fuente";
     fontSizeButton.setAttribute('aria-label', "Tamaño de fuente");
@@ -351,6 +354,7 @@ class Accessibility {
     // Toggle button classes for visual indication
     invertButton.classList.toggle('ag-btn-secondary');
     invertButton.classList.toggle('ag-btn-confirm');
+    invertButton.setAttribute('aria-pressed', invertButton.classList.contains('ag-btn-confirm') ? 'true' : 'false');
   }
 
   /**
@@ -367,6 +371,7 @@ class Accessibility {
 
     // Update the button's classes to reflect the non-active state
     invertButton.classList.replace('ag-btn-confirm', 'ag-btn-secondary');
+    invertButton.setAttribute('aria-pressed', 'false');
 
     // Reset saturation state if specified
     if (resetSaturationState) {
@@ -394,6 +399,7 @@ class Accessibility {
     // Toggle button classes for visual indication
     greyButton.classList.toggle('ag-btn-secondary');
     greyButton.classList.toggle('ag-btn-confirm');
+    greyButton.setAttribute('aria-pressed', greyButton.classList.contains('ag-btn-confirm') ? 'true' : 'false');
   }
 
   /**
@@ -410,6 +416,7 @@ class Accessibility {
 
     // Update the button's classes to reflect the non-active state
     greyButton.classList.replace('ag-btn-confirm', 'ag-btn-secondary');
+    greyButton.setAttribute('aria-pressed', 'false');
 
     // Reset saturation state if specified
     if (resetSaturationState) {
@@ -458,6 +465,7 @@ class Accessibility {
     // Toggle button classes based on the new saturation state
     saturationButton.classList.toggle('ag-btn-secondary', btnClass === 'ag-btn-secondary');
     saturationButton.classList.toggle('ag-btn-confirm', btnClass === 'ag-btn-confirm');
+    saturationButton.setAttribute('aria-pressed', btnClass === 'ag-btn-confirm' ? 'true' : 'false');
 
     // Update the saturation state to cycle through 0, 1, and 2
     this.saturationState = (this.saturationState + 1) % saturationOptions.length;
@@ -487,6 +495,7 @@ class Accessibility {
     // Update button appearance to indicate it is inactive
     saturationButton.classList.remove('ag-btn-confirm');
     saturationButton.classList.add('ag-btn-secondary');
+    saturationButton.setAttribute('aria-pressed', 'false');
 
     // Reset the saturation state
     this.saturationState = 1;
@@ -529,6 +538,7 @@ class Accessibility {
     // Update button classes for visual indication
     readableFontBtn.classList.remove('ag-btn-secondary', 'ag-btn-confirm');
     readableFontBtn.classList.add(btnClass);
+    readableFontBtn.setAttribute('aria-pressed', btnClass === 'ag-btn-confirm' ? 'true' : 'false');
 
     // Update the font family state to cycle through 0, 1, 2, and 3
     this.fontFamilyState = (this.fontFamilyState + 1) % fontOptions.length;
@@ -549,6 +559,7 @@ class Accessibility {
 
     readableFontBtn.classList.remove('ag-btn-confirm');
     readableFontBtn.classList.add('ag-btn-secondary');
+    readableFontBtn.setAttribute('aria-pressed', 'false');
     btnTitle.textContent = "Seleccionar fuente";
     readableFontBtn.setAttribute('aria-label', "Seleccionar fuente");
     this.fontFamilyState = 1;
@@ -637,6 +648,7 @@ class Accessibility {
     // Update button classes based on the contrast state
     contrastButton.classList.toggle('ag-btn-secondary', this.contrastState === 0);
     contrastButton.classList.toggle('ag-btn-confirm', this.contrastState > 0);
+    contrastButton.setAttribute('aria-pressed', this.contrastState > 0 ? 'true' : 'false');
 
     // Cycle through the contrast styles
     this.contrastState = (this.contrastState + 1) % contrastStyles.length;
@@ -681,6 +693,7 @@ class Accessibility {
     // Toggle button classes to reflect default contrast state
     contrastButton.classList.remove('ag-btn-confirm');
     contrastButton.classList.add('ag-btn-secondary');
+    contrastButton.setAttribute('aria-pressed', 'false');
 
     // Reset the internal contrast state to default (0)
     this.contrastState = 1;
@@ -705,6 +718,7 @@ class Accessibility {
 
     // Update the button's visual state to indicate the text transformation state
     toUpperCaseButton.classList.toggle('ag-btn-confirm');
+    toUpperCaseButton.setAttribute('aria-pressed', toUpperCaseButton.classList.contains('ag-btn-confirm') ? 'true' : 'false');
   }
 
   /**
@@ -726,6 +740,7 @@ class Accessibility {
 
     // Update the button's visual state to indicate the reset
     toUpperCaseButton.classList.remove('ag-btn-confirm');
+    toUpperCaseButton.setAttribute('aria-pressed', 'false');
   }
 
   /**
@@ -753,6 +768,7 @@ class Accessibility {
 
     // Update the button's visual state to indicate the state of horizontal space
     horizontalSpaceButton.classList.toggle('ag-btn-confirm');
+    horizontalSpaceButton.setAttribute('aria-pressed', horizontalSpaceButton.classList.contains('ag-btn-confirm') ? 'true' : 'false');
   }
 
   /**
@@ -780,6 +796,7 @@ class Accessibility {
 
     // Update the button's visual state to indicate the reset
     horizontalSpaceButton.classList.remove('ag-btn-confirm');
+    horizontalSpaceButton.setAttribute('aria-pressed', 'false');
   }
 
   /**
@@ -816,6 +833,7 @@ class Accessibility {
     // Update button classes for visual indication
     lineHeightButton.classList.remove('ag-btn-secondary', 'ag-btn-confirm');
     lineHeightButton.classList.add(btnClass);
+    lineHeightButton.setAttribute('aria-pressed', btnClass === 'ag-btn-confirm' ? 'true' : 'false');
 
     // Update the line height state to cycle through 0, 1, and 2
     this.lineHeightState = (this.lineHeightState + 1) % lineHeightOptions.length;
@@ -918,6 +936,7 @@ class Accessibility {
     // Actualizar las clases del botón
     colorBlindnessButton.classList.remove('ag-btn-secondary', 'ag-btn-confirm');
     colorBlindnessButton.classList.add(btnClass);
+    colorBlindnessButton.setAttribute('aria-pressed', btnClass === 'ag-btn-confirm' ? 'true' : 'false');
 
     // Actualizar el estado
     this.colorBlindnessState = (this.colorBlindnessState + 1) % types.length;
@@ -941,6 +960,7 @@ class Accessibility {
     // Restablecer las clases del botón
     colorBlindnessButton.classList.remove('ag-btn-confirm');
     colorBlindnessButton.classList.add('ag-btn-secondary');
+    colorBlindnessButton.setAttribute('aria-pressed', 'false');
 
     // Restablecer el estado
     this.colorBlindnessState = 1;
@@ -957,6 +977,7 @@ class Accessibility {
 
     body.classList.toggle('big-cursor');
     cursorButton.classList.toggle('ag-btn-confirm');
+    cursorButton.setAttribute('aria-pressed', cursorButton.classList.contains('ag-btn-confirm') ? 'true' : 'false');
   }
 
   /**
@@ -969,6 +990,7 @@ class Accessibility {
     if (!body || !cursorButton) return;
     body.classList.remove('big-cursor');
     cursorButton.classList.remove('ag-btn-confirm');
+    cursorButton.setAttribute('aria-pressed', 'false');
   }
 
   /**

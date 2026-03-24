@@ -1927,6 +1927,7 @@ document.addEventListener("DOMContentLoaded", function () {
 
       if (targetSection.style.display === "block") {
         targetSection.style.display = "none";
+        button.setAttribute("aria-expanded", "false");
       } else {
         // Oculta todas las secciones antes de mostrar la deseada
         buttons.forEach(function (otherButton) {
@@ -1935,10 +1936,12 @@ document.addEventListener("DOMContentLoaded", function () {
 
           if (otherTargetSection !== targetSection) {
             otherTargetSection.style.display = "none";
+            otherButton.setAttribute("aria-expanded", "false");
           }
         });
 
         targetSection.style.display = "block";
+        button.setAttribute("aria-expanded", "true");
       }
       event.stopPropagation();
     });
@@ -1951,6 +1954,7 @@ document.addEventListener("DOMContentLoaded", function () {
         var targetId = button.getAttribute("data-target");
         var targetSection = document.getElementById(targetId);
         targetSection.style.display = "none";
+        button.setAttribute("aria-expanded", "false");
       });
     }
   });
