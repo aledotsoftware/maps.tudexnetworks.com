@@ -2744,7 +2744,7 @@ class GestorMenu {
           <div class='center-flex'>
             <div class='has-feedback has-clear formBtns center-flex'>
               <input type='text' class='form-control ag-input-text' id='q' name='q' value='${this.getQuerySearch()}' placeholder='Buscar capa'>
-              <button onClick='reloadMenu()' class='ag-btn ag-btn-secondary btn-reset-layers form-control-clear glyphicon glyphicon-remove-circle form-control-feedback hidden'></button>
+              <button onClick='reloadMenu()' class='ag-btn ag-btn-secondary btn-reset-layers form-control-clear glyphicon glyphicon-remove-circle form-control-feedback hidden' aria-label='Limpiar búsqueda' title='Limpiar búsqueda'></button>
             </div>
             <button class='ag-btn ag-btn-secondary btn-search' type='submit' title='Buscar capa' aria-label='Buscar capa'>
             <span class='glyphicon glyphicon-search' aria-hidden='true'></span>

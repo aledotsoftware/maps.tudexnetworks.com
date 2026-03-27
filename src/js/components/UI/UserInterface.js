@@ -182,8 +182,8 @@ class InputToggle {
       <div class="input-group">
         <input id="txtPassword" type="${type}" class="form-control" onchange="this.togglePasswordButton">
         <span class="input-group-btn">
-          <button id="show_password" class="btn btn-success" type="button" style="display: none;" onclick="${_onclick}"> 
-            <span>${content}</span>
+          <button id="show_password" class="btn btn-success" type="button" style="display: none;" onclick="${_onclick}" aria-label="Mostrar contraseña" title="Mostrar contraseña">
+            <span aria-hidden="true">${content}</span>
           </button>
         </span>
       </div>
@@ -195,14 +195,24 @@ class InputToggle {
     const passwordInput = document.getElementById("txtPassword");
     const eyeIcon = document.getElementById("eye-icon");
 
+    const showPasswordButton = document.getElementById("show_password");
+
     if (passwordInput.type === "password") {
       passwordInput.type = "text";
       eyeIcon.classList.remove("fa-eye-slash");
       eyeIcon.classList.add("fa-eye");
+      if (showPasswordButton) {
+        showPasswordButton.setAttribute("aria-label", "Ocultar contraseña");
+        showPasswordButton.setAttribute("title", "Ocultar contraseña");
+      }
     } else {
       passwordInput.type = "password";
       eyeIcon.classList.remove("fa-eye");
       eyeIcon.classList.add("fa-eye-slash");
+      if (showPasswordButton) {
+        showPasswordButton.setAttribute("aria-label", "Mostrar contraseña");
+        showPasswordButton.setAttribute("title", "Mostrar contraseña");
+      }
     }
   }
 
