@@ -26,19 +26,20 @@ class ZoomLevel {
         zoomLevel.title = 'Zoom';
         zoomLevel.className = 'leaflet-bar leaflet-control';
 
-        const iconContainer = document.createElement('a');
+        const iconContainer = document.createElement('div');
         iconContainer.id = 'icon-container';
-        iconContainer.setAttribute('aria-label', 'Zoom');
+        iconContainer.setAttribute('aria-hidden', 'true');
 
         const zoomIcon = document.createElement('i');
         zoomIcon.classList = 'fa fa-search-plus';
-        zoomIcon.setAttribute('aria-hidden', 'true');
 
-        const valueContainer = document.createElement('a');
+        const valueContainer = document.createElement('div');
         valueContainer.id = 'zoom-container';
 
         const zoomValue = document.createElement('p');
         zoomValue.id = 'zoom-value';
+        zoomValue.setAttribute('aria-live', 'polite');
+        zoomValue.setAttribute('aria-atomic', 'true');
 
         iconContainer.appendChild(zoomIcon);
         valueContainer.appendChild(zoomValue);
@@ -67,6 +68,6 @@ class ZoomLevel {
     }
 
     updateZoomLevel() {
-        this._zoomLevelDomElement.innerHTML = `<b>${this._zoom}</b>`;
+        this._zoomLevelDomElement.innerHTML = `<span class="sr-only">Zoom: </span><b>${this._zoom}</b>`;
     }
 }
