@@ -14,3 +14,7 @@
 ## 2024-03-21 - Dynamic aria-pressed attribute for custom toggle buttons
 **Learning:** For custom vanilla JS toggle buttons (e.g., those activating map tools), applying `role="button"` and an initial `aria-pressed="false"` isn't enough; the `aria-pressed` attribute must be dynamically updated in the click/keydown handlers to accurately reflect the active state to screen readers, and styles should generally target the container to avoid overriding the native or ARIA behavior.
 **Action:** Always ensure that toggle buttons have a dynamic update to their `aria-pressed` attribute (toggling between `"true"` and `"false"`) in the JavaScript code handling the state changes.
+
+## 2024-05-18 - Announce Dynamic Numerical Indicators with aria-live
+**Learning:** For dynamic numerical indicators (like zoom levels), simply updating the number inside a container isn't enough for screen readers. The element needs `aria-live="polite"` and `aria-atomic="true"` to announce changes. Also, wrapping the value with an `.sr-only` descriptive prefix ensures screen readers provide context (e.g., "Zoom: 5" instead of just "5"). Furthermore, avoid using anchor tags (`<a>`) without `href` as generic non-interactive containers; use `<div>` or `<span>` instead.
+**Action:** When adding or fixing dynamic numeric values (like pagination, zoom levels, or counters), ensure they have `aria-live` and a visually hidden `.sr-only` label if context is missing.
