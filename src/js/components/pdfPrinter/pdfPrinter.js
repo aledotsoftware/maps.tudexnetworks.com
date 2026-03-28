@@ -49,7 +49,7 @@ class PdfPrinter {
      * @type {string}
      */
     this.component = `
-      <a class="iconPDF-container" title="Imprimir/ Guardar en PDF" role="button" tabindex="0" aria-label="Imprimir o guardar en PDF" aria-pressed="false">
+      <a class="iconPDF-container" title="Imprimir/ Guardar en PDF" role="button" tabindex="0" aria-label="Imprimir o guardar en PDF">
         <i id="iconPDF" class="fas fa-print" aria-hidden="true"></i>
       </a>
     `;
