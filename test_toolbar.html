@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>Test Toolbar</title>
+</head>
+<body>
+  <div class="leaflet-top leaflet-left">
+  </div>
+  <div class="leaflet-top leaflet-right">
+  </div>
+
+  <script>
+    class ToolbarVisibilityToggler {
+      constructor() {}
+
+      createBtn(id, btnId, title, iconClass) {
+        const elem = document.createElement("div");
+        elem.className = "leaflet-bar leaflet-control";
+        elem.id = btnId;
+        elem.title = title;
+        elem.style = "cursor: pointer;";
+        elem.setAttribute("role", "button");
+        elem.setAttribute("tabindex", "0");
+        elem.setAttribute("aria-label", title);
+        elem.setAttribute("aria-expanded", "true");
+
+        const elemIcon = document.createElement("a");
+        elemIcon.id = id;
+        elemIcon.innerHTML = `<span id="map-toolbar-span" class="${iconClass}" aria-hidden="true"></span>`;
+        elem.appendChild(elemIcon);
+
+        elem.addEventListener("click", (e) => {
+          e.stopPropagation();
+          const btnToolId =
+            elem.id === "hideBtnRight"
+              ? ".leaflet-top.leaflet-right"
+              : ".leaflet-top.leaflet-left";
+          const btnTool = document.querySelector(btnToolId);
+
+          this.toggleToolbarVisibility(btnTool);
+
+          const isExpanded = elem.getAttribute("aria-expanded") === "true";
+          elem.setAttribute("aria-expanded", !isExpanded);
+        });
+
+        document.querySelector(".leaflet-top.leaflet-right").appendChild(elem);
+      }
+
+      toggleToolbarVisibility(btnTool) {
+        btnTool.childNodes.forEach((node) => {
+          if (node.id !== "hideBtnRight" && node.id !== "hideBtnLeft") {
+            node.hidden = !node.hidden;
+          }
+        });
+      }
+
+      hideToolbar(toolbar, show) {
+        toolbar.childNodes.forEach((node) => {
+          if (node.id !== "hideBtnRight" && node.id !== "hideBtnLeft") {
+            node.hidden = !show;
+          }
+        });
+      }
+
+      createComponent(showToolbar) {
+        this.createBtn(
+          "map-toolbar-icon-left",
+          "hideBtnLeft",
+          "Esconder herramientas",
+          "fa-solid fa-wrench"
+        );
+        this.createBtn(
+          "map-toolbar-icon-right",
+          "hideBtnRight",
+          "Esconder herramientas de dibujo",
+          "bx bxs-pencil"
+        );
+
+        window.onload = () => {
+          const rightToolbar = document.querySelector(".leaflet-top.leaflet-right");
+          const leftToolbar = document.querySelector(".leaflet-top.leaflet-left");
+
+          this.hideToolbar(rightToolbar, showToolbar);
+          this.hideToolbar(leftToolbar, showToolbar);
+
+          const leftBtn = document.getElementById("hideBtnLeft");
+          if (leftBtn) leftBtn.setAttribute("aria-expanded", showToolbar);
+
+          const rightBtn = document.getElementById("hideBtnRight");
+          if (rightBtn) rightBtn.setAttribute("aria-expanded", showToolbar);
+        };
+      }
+    }
+
+    const toggler = new ToolbarVisibilityToggler();
+    toggler.createComponent(true);
+    window.dispatchEvent(new Event('load')); // simulate load
+
+    setTimeout(() => {
+      console.log('Left expanded:', document.getElementById('hideBtnLeft').getAttribute('aria-expanded'));
+      document.getElementById('hideBtnLeft').click();
+      console.log('Left expanded after click:', document.getElementById('hideBtnLeft').getAttribute('aria-expanded'));
+    }, 100);
+  </script>
+</body>
+</html>

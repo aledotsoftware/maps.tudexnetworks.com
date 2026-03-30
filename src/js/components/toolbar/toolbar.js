@@ -22,6 +22,7 @@ class ToolbarVisibilityToggler {
     elem.setAttribute("role", "button");
     elem.setAttribute("tabindex", "0");
     elem.setAttribute("aria-label", title);
+    elem.setAttribute("aria-expanded", "true");
 
     const elemIcon = document.createElement("a");
     elemIcon.id = id;
@@ -41,13 +42,16 @@ class ToolbarVisibilityToggler {
     elem.addEventListener("click", (e) => {
       e.stopPropagation(); // Prevent click event propagation
       const btnToolId =
-        e.target.offsetParent.id === "hideBtnRight"
+        elem.id === "hideBtnRight"
           ? ".leaflet-top.leaflet-right"
           : ".leaflet-top.leaflet-left";
       const btnTool = document.querySelector(btnToolId);
 
       // Iterate through each child node of the selected maps buttons and toggle visibility
       this.toggleToolbarVisibility(btnTool);
+
+      const isExpanded = elem.getAttribute("aria-expanded") === "true";
+      elem.setAttribute("aria-expanded", !isExpanded);
     });
 
     // Event listener to prevent zoom on double-click
@@ -114,6 +118,12 @@ class ToolbarVisibilityToggler {
 
       this.hideToolbar(rightToolbar, showToolbar);
       this.hideToolbar(leftToolbar, showToolbar);
+
+      const leftBtn = document.getElementById("hideBtnLeft");
+      if (leftBtn) leftBtn.setAttribute("aria-expanded", showToolbar);
+
+      const rightBtn = document.getElementById("hideBtnRight");
+      if (rightBtn) rightBtn.setAttribute("aria-expanded", showToolbar);
     };
   }
 }
