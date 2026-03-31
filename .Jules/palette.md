@@ -18,3 +18,7 @@
 ## 2024-05-18 - Announce Dynamic Numerical Indicators with aria-live
 **Learning:** For dynamic numerical indicators (like zoom levels), simply updating the number inside a container isn't enough for screen readers. The element needs `aria-live="polite"` and `aria-atomic="true"` to announce changes. Also, wrapping the value with an `.sr-only` descriptive prefix ensures screen readers provide context (e.g., "Zoom: 5" instead of just "5"). Furthermore, avoid using anchor tags (`<a>`) without `href` as generic non-interactive containers; use `<div>` or `<span>` instead.
 **Action:** When adding or fixing dynamic numeric values (like pagination, zoom levels, or counters), ensure they have `aria-live` and a visually hidden `.sr-only` label if context is missing.
+
+## 2024-03-08 - Do not use aria-pressed on standard action buttons
+**Learning:** The `aria-pressed` attribute is strictly for buttons that hold a toggleable 'pressed' state. Its presence on standard action buttons (e.g., print, save, submit) that trigger a one-off process will incorrectly signal to screen readers that they are toggleable.
+**Action:** Only use `aria-pressed` on buttons that represent a state toggle. Remove it from simple action buttons to ensure correct screen reader announcements.
