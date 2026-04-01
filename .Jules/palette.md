@@ -18,3 +18,7 @@
 ## 2024-05-18 - Announce Dynamic Numerical Indicators with aria-live
 **Learning:** For dynamic numerical indicators (like zoom levels), simply updating the number inside a container isn't enough for screen readers. The element needs `aria-live="polite"` and `aria-atomic="true"` to announce changes. Also, wrapping the value with an `.sr-only` descriptive prefix ensures screen readers provide context (e.g., "Zoom: 5" instead of just "5"). Furthermore, avoid using anchor tags (`<a>`) without `href` as generic non-interactive containers; use `<div>` or `<span>` instead.
 **Action:** When adding or fixing dynamic numeric values (like pagination, zoom levels, or counters), ensure they have `aria-live` and a visually hidden `.sr-only` label if context is missing.
+
+## 2026-04-01 - Dynamic aria-expanded for collapsible toolbars
+**Learning:** When building custom toggle buttons that show/hide other UI elements (like toolbars), static ARIA labels are insufficient. The `aria-expanded` attribute must be updated dynamically along with the `title` and `aria-label` to accurately reflect the current visibility state to screen readers and visually via tooltips, making the interface's behavior predictable.
+**Action:** For buttons that act as toggles for collapsible sections, always dynamically update `aria-expanded` (true/false) and toggle the `title` and `aria-label` text (e.g., between "Hide" and "Show") in the click handler based on the new visibility state.

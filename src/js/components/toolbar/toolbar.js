@@ -22,6 +22,7 @@ class ToolbarVisibilityToggler {
     elem.setAttribute("role", "button");
     elem.setAttribute("tabindex", "0");
     elem.setAttribute("aria-label", title);
+    elem.setAttribute("aria-expanded", "true");
 
     const elemIcon = document.createElement("a");
     elemIcon.id = id;
@@ -41,13 +42,13 @@ class ToolbarVisibilityToggler {
     elem.addEventListener("click", (e) => {
       e.stopPropagation(); // Prevent click event propagation
       const btnToolId =
-        e.target.offsetParent.id === "hideBtnRight"
+        id === "hideBtnRight"
           ? ".leaflet-top.leaflet-right"
           : ".leaflet-top.leaflet-left";
       const btnTool = document.querySelector(btnToolId);
 
       // Iterate through each child node of the selected maps buttons and toggle visibility
-      this.toggleToolbarVisibility(btnTool);
+      this.toggleToolbarVisibility(btnTool, elem, id);
     });
 
     // Event listener to prevent zoom on double-click
@@ -62,15 +63,30 @@ class ToolbarVisibilityToggler {
   /**
    * Toggles the visibility of the child nodes of the selected maps buttons.
    * @param {HTMLElement} btnTool - The button tool element.
+   * @param {HTMLElement} toggleBtn - The button element that was clicked.
+   * @param {string} id - The id of the button element.
    */
-  toggleToolbarVisibility(btnTool) {
+  toggleToolbarVisibility(btnTool, toggleBtn, id) {
+    let isHidden = false;
     // Iterate through each child node of the selected maps buttons and toggle visibility
     btnTool.childNodes.forEach((node) => {
       // Toggle visibility for nodes that are not "hideBtnRight" or "hideBtnLeft"
       if (node.id !== "hideBtnRight" && node.id !== "hideBtnLeft") {
         node.hidden = !node.hidden;
+        isHidden = node.hidden;
       }
     });
+
+    if (toggleBtn) {
+      const isRight = id === "hideBtnRight";
+      const title = isHidden
+        ? (isRight ? "Mostrar herramientas de dibujo" : "Mostrar herramientas")
+        : (isRight ? "Esconder herramientas de dibujo" : "Esconder herramientas");
+
+      toggleBtn.title = title;
+      toggleBtn.setAttribute("aria-label", title);
+      toggleBtn.setAttribute("aria-expanded", isHidden ? "false" : "true");
+    }
   }
 
   /**
@@ -84,6 +100,25 @@ class ToolbarVisibilityToggler {
         node.hidden = !show;
       }
     });
+
+    // Update button attributes
+    const isRight = toolbar.classList.contains("leaflet-right");
+    const toggleBtnId = isRight ? "hideBtnRight" : "hideBtnLeft";
+    const toggleBtn = document.getElementById(toggleBtnId);
+
+    if (toggleBtn) {
+      const title = !show
+        ? (isRight ? "Mostrar herramientas de dibujo" : "Mostrar herramientas")
+        : (isRight ? "Esconder herramientas de dibujo" : "Esconder herramientas");
+
+      // Ensure we target the outer div container which has the ARIA attributes
+      const containerBtn = toggleBtn.parentElement;
+      if (containerBtn && containerBtn.classList.contains('leaflet-control')) {
+        containerBtn.title = title;
+        containerBtn.setAttribute("aria-label", title);
+        containerBtn.setAttribute("aria-expanded", show ? "true" : "false");
+      }
+    }
   }
 
   /**
