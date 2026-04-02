@@ -176,10 +176,20 @@ class ImpresorItemHTML extends Impresor {
     btn_zoom.className = "zoom-layer";
     btn_zoom.setAttribute("layername", item.nombre);
     btn_zoom.style.alignSelf = "center";
+    btn_zoom.setAttribute("role", "button");
+    btn_zoom.setAttribute("tabindex", "0");
+    btn_zoom.setAttribute("aria-label", "Zoom a capa");
+    btn_zoom.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        btn_zoom.click();
+      }
+    });
 
     const btn_zoom_icon = document.createElement("i");
     btn_zoom_icon.classList = "fas fa-search-plus";
     btn_zoom_icon.title = "Zoom a capa";
+    btn_zoom_icon.setAttribute("aria-hidden", "true");
 
     const btn_opacity = document.createElement("div");
     btn_opacity.className = "opacity-layer";
@@ -189,6 +199,7 @@ class ImpresorItemHTML extends Impresor {
     const btn_opacity_icon = document.createElement("i");
     btn_opacity_icon.classList = "fa-solid fa-circle-half-stroke";
     btn_opacity_icon.title = "Modificar la opacidad de la capa";
+    btn_opacity_icon.setAttribute("aria-hidden", "true");
 
     /**
      * Adds a range input to change the layer's opacity
@@ -3868,8 +3879,17 @@ class Menu_UI {
     btn_zoom_layer.className = "zoom-layer-combobox";
     btn_zoom_layer.style = "align-self: center;";
     btn_zoom_layer.layername = title;
+    btn_zoom_layer.setAttribute("role", "button");
+    btn_zoom_layer.setAttribute("tabindex", "0");
+    btn_zoom_layer.setAttribute("aria-label", "Zoom a capa");
     btn_zoom_layer.innerHTML =
-      "<i class='fas fa-search-plus' title='Zoom a capa'></i>";
+      "<i class='fas fa-search-plus' title='Zoom a capa' aria-hidden='true'></i>";
+    btn_zoom_layer.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        btn_zoom_layer.click();
+      }
+    });
     btn_zoom_layer.addEventListener("click", function () {
       if (li.className === "capa list-group-item") {
         li.className = "capa list-group-item active";
@@ -4168,7 +4188,16 @@ class Menu_UI {
 
     let zoom_button = document.createElement("div");
     zoom_button.className = "loadservice-layer-img";
-    zoom_button.innerHTML = `<i class="fas fa-search-plus" title="Zoom a capa"></i>`;
+    zoom_button.setAttribute("role", "button");
+    zoom_button.setAttribute("tabindex", "0");
+    zoom_button.setAttribute("aria-label", "Zoom a capa");
+    zoom_button.innerHTML = `<i class="fas fa-search-plus" title="Zoom a capa" aria-hidden="true"></i>`;
+    zoom_button.addEventListener("keydown", function (e) {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        zoom_button.click();
+      }
+    });
     zoom_button.onclick = function () {
       clickWMSLayer(layer, layer_item, fileName);
       let bounds = [
