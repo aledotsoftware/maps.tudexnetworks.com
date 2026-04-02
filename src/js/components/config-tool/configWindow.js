@@ -11,10 +11,19 @@ class configWindow {
     btncloseConfig.id = "btnClose-config";
     btncloseConfig.href = "javascript:void(0)";
     btncloseConfig.style = "float:right; color:#676767; overflow-y:auto;";
-    btncloseConfig.innerHTML = '<i class="fa fa-times"></i>';
+    btncloseConfig.setAttribute("role", "button");
+    btncloseConfig.setAttribute("aria-label", "Cerrar configuración");
+    btncloseConfig.setAttribute("title", "Cerrar configuración");
+    btncloseConfig.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>';
     btncloseConfig.onclick = () => {
       configWrapper.remove();
     };
+    btncloseConfig.addEventListener("keydown", (e) => {
+      if (e.key === "Enter" || e.key === " ") {
+        e.preventDefault();
+        btncloseConfig.click();
+      }
+    });
     configWrapper.appendChild(btncloseConfig);
 
     const configWindow = document.createElement("div");

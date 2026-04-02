@@ -22,3 +22,7 @@
 ## 2024-11-20 - Incorrect aria-pressed usage on action buttons
 **Learning:** `aria-pressed` was incorrectly applied to a standard action button (Print/Save to PDF). This attribute is meant exclusively for toggleable buttons that hold a "pressed" state (like a mute button), not for buttons that trigger a one-off process. Adding `aria-pressed="false"` to a standard button misleads screen reader users into thinking it's a toggle button.
 **Action:** When auditing or implementing accessibility on buttons, only add `aria-pressed` if the button represents a state that can be toggled on/off. Remove it from simple action triggers.
+
+## 2024-04-02 - Keyboard Access on Custom Vanilla JS Action Links
+**Learning:** Custom UI elements, especially anchor (`<a>`) tags used as action buttons (`href="javascript:void(0)"`), lack native trigger semantics for Space/Enter keys like `<button>` elements do. They also often contain inner decorative icons (`<i>`) that duplicate screen reader announcements if the parent gets an `aria-label`.
+**Action:** When creating icon-only buttons with vanilla JS, ensure the parent has `role="button"`, `aria-label`, and `title`. Add `aria-hidden="true"` to inner icon tags (e.g. `<i>`). Crucially, manually attach a `keydown` event listener to trigger the `click` handler for Space/Enter keys.
