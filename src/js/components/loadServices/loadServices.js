@@ -50,7 +50,7 @@ class ModalService {
     form.innerHTML = `
     <div class="input-group center-flex">
       <span class="input-group-addon center-flex" id="basic-addon1"><i class="fas fa-link"></i></span>
-      <input value="" type='text' id='wms-input' class='form-control ag-input-text' name="input-url" placeholder="http://.../geoserver/ows?service=wms&version=1.3.0..." aria-describedby="basic-addon1">
+      <input value="" type='text' id='wms-input' class='form-control ag-input-text' name="input-url" placeholder="http://.../geoserver/ows?service=wms&version=1.3.0..." aria-label="URL del servicio WMS" aria-describedby="basic-addon1">
       <button class="input-group-addon ag-btn ag-btn-primary" id="buttonConectar" onclick="handleURLInput(event)">Conectar</button>
     </div>
   `;
@@ -94,21 +94,19 @@ class ModalService {
               </form>
               `;
         let editButton = document.createElement("button");
-        editButton.classList.add("fas");
-        editButton.classList.add("fa-pen-square");
         editButton.setAttribute("id", `title-edit-${serviceID}`);
         editButton.setAttribute("aria-label", "Editar título");
         editButton.setAttribute("title", "Editar título");
+        editButton.innerHTML = '<i class="fas fa-pen-square" aria-hidden="true"></i>';
         editButton.onclick = function (event) {
           editServiceTitle(serviceID, event);
         };
 
         let saveButton = document.createElement("button");
-        saveButton.classList.add("fas");
-        saveButton.classList.add("fa-save");
         saveButton.setAttribute("id", `title-save-${serviceID}`);
         saveButton.setAttribute("aria-label", "Guardar título");
         saveButton.setAttribute("title", "Guardar título");
+        saveButton.innerHTML = '<i class="fas fa-save" aria-hidden="true"></i>';
         saveButton.onclick = function (event) {
           saveServiceTitle(serviceID, event);
         };
@@ -251,21 +249,19 @@ async function handleURLInput(e) {
 		</form>
 		`;
       let editButton = document.createElement("button");
-      editButton.classList.add("fas");
-      editButton.classList.add("fa-pen-square");
       editButton.setAttribute("id", `title-edit-${serviceID}`);
       editButton.setAttribute("aria-label", "Editar título");
       editButton.setAttribute("title", "Editar título");
+      editButton.innerHTML = '<i class="fas fa-pen-square" aria-hidden="true"></i>';
       editButton.onclick = function (event) {
         editServiceTitle(serviceID, event);
       };
 
       let saveButton = document.createElement("button");
-      saveButton.classList.add("fas");
-      saveButton.classList.add("fa-save");
       saveButton.setAttribute("id", `title-save-${serviceID}`);
       saveButton.setAttribute("aria-label", "Guardar título");
       saveButton.setAttribute("title", "Guardar título");
+      saveButton.innerHTML = '<i class="fas fa-save" aria-hidden="true"></i>';
       saveButton.onclick = function (event) {
         saveServiceTitle(serviceID, event);
       };
@@ -377,11 +373,10 @@ function saveServiceTitle(serviceID, event) {
   input.style.display = "none";
 
   let editButton = document.createElement("button");
-  editButton.classList.add("fas");
-  editButton.classList.add("fa-pen-square");
   editButton.setAttribute("id", `title-edit-${serviceID}`);
   editButton.setAttribute("aria-label", "Editar título");
   editButton.setAttribute("title", "Editar título");
+  editButton.innerHTML = '<i class="fas fa-pen-square" aria-hidden="true"></i>';
   editButton.onclick = function (event) {
     editServiceTitle(serviceID, event);
   };
