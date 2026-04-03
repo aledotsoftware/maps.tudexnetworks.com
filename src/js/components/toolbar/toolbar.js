@@ -22,6 +22,8 @@ class ToolbarVisibilityToggler {
     elem.setAttribute("role", "button");
     elem.setAttribute("tabindex", "0");
     elem.setAttribute("aria-label", title);
+    elem.setAttribute("aria-expanded", "true");
+    elem.dataset.baseTitle = title.replace("Esconder ", "").replace("Mostrar ", ""); // e.g. "herramientas"
 
     const elemIcon = document.createElement("a");
     elemIcon.id = id;
@@ -40,14 +42,26 @@ class ToolbarVisibilityToggler {
     // Event listener to toggle visibility of map buttons on click
     elem.addEventListener("click", (e) => {
       e.stopPropagation(); // Prevent click event propagation
+      // If e.target isn't the outer div, we can fall back to 'elem' which is lexically scoped
+      const targetElem = e.target.closest('.leaflet-bar') || elem;
+      const targetBtnId = targetElem.id || btnId;
+
       const btnToolId =
-        e.target.offsetParent.id === "hideBtnRight"
+        targetBtnId === "hideBtnRight"
           ? ".leaflet-top.leaflet-right"
           : ".leaflet-top.leaflet-left";
       const btnTool = document.querySelector(btnToolId);
 
       // Iterate through each child node of the selected maps buttons and toggle visibility
       this.toggleToolbarVisibility(btnTool);
+
+      const isHidden = btnTool.childNodes.length > 0 && Array.from(btnTool.childNodes).some(node => node.id !== "hideBtnRight" && node.id !== "hideBtnLeft" && node.hidden);
+
+      const newAction = isHidden ? "Mostrar" : "Esconder";
+      const newTitle = `${newAction} ${targetElem.dataset.baseTitle || targetBtnId.replace('hideBtn', 'herramientas')}`;
+      targetElem.title = newTitle;
+      targetElem.setAttribute("aria-label", newTitle);
+      targetElem.setAttribute("aria-expanded", isHidden ? "false" : "true");
     });
 
     // Event listener to prevent zoom on double-click
@@ -82,6 +96,21 @@ class ToolbarVisibilityToggler {
     toolbar.childNodes.forEach((node) => {
       if (node.id !== "hideBtnRight" && node.id !== "hideBtnLeft") {
         node.hidden = !show;
+      }
+    });
+
+    // Update the visibility toggler buttons to reflect state
+    const rightBtn = document.getElementById("hideBtnRight");
+    const leftBtn = document.getElementById("hideBtnLeft");
+
+    [rightBtn, leftBtn].forEach(btn => {
+      if (btn) {
+        const newAction = show ? "Esconder" : "Mostrar";
+        const baseTitle = btn.dataset.baseTitle || (btn.id === 'hideBtnRight' ? 'herramientas de dibujo' : 'herramientas');
+        const newTitle = `${newAction} ${baseTitle}`;
+        btn.title = newTitle;
+        btn.setAttribute("aria-label", newTitle);
+        btn.setAttribute("aria-expanded", show ? "true" : "false");
       }
     });
   }
