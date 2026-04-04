@@ -22,3 +22,7 @@
 ## 2024-11-20 - Incorrect aria-pressed usage on action buttons
 **Learning:** `aria-pressed` was incorrectly applied to a standard action button (Print/Save to PDF). This attribute is meant exclusively for toggleable buttons that hold a "pressed" state (like a mute button), not for buttons that trigger a one-off process. Adding `aria-pressed="false"` to a standard button misleads screen reader users into thinking it's a toggle button.
 **Action:** When auditing or implementing accessibility on buttons, only add `aria-pressed` if the button represents a state that can be toggled on/off. Remove it from simple action triggers.
+
+## 2024-11-21 - Add focus visible styles for keyboard navigation
+**Learning:** Custom interactive UI elements (like `.ag-btn`, `.ag-input-text`) often lose their default browser focus rings due to CSS overrides (e.g., `outline: 0` or `box-shadow: none`), making keyboard navigation difficult for users relying on visual focus indicators.
+**Action:** When styling custom UI components, explicitly define a `:focus-visible` CSS rule (e.g., `outline: 2px solid var(--secondary-color)`) to ensure visible focus rings are present for keyboard users while not affecting mouse users.
