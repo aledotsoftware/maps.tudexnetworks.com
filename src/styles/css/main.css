@@ -463,6 +463,13 @@ div.leaflet-top.leaflet-left {
   box-shadow: none;
 }
 
+.ag-btn:focus-visible,
+.form-control:focus-visible,
+.ag-input-text:focus-visible {
+  outline: 2px solid var(--btn-primary-color, #17608e);
+  outline-offset: 2px;
+}
+
 /* Menu principal */
 .menu-container {
   width: auto;
