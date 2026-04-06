@@ -22,3 +22,7 @@
 ## 2024-11-20 - Incorrect aria-pressed usage on action buttons
 **Learning:** `aria-pressed` was incorrectly applied to a standard action button (Print/Save to PDF). This attribute is meant exclusively for toggleable buttons that hold a "pressed" state (like a mute button), not for buttons that trigger a one-off process. Adding `aria-pressed="false"` to a standard button misleads screen reader users into thinking it's a toggle button.
 **Action:** When auditing or implementing accessibility on buttons, only add `aria-pressed` if the button represents a state that can be toggled on/off. Remove it from simple action triggers.
+
+## 2024-11-20 - Ensure aria-label on inputs without visible labels
+**Learning:** `input` fields (like range sliders or search bars) that do not have associated `<label>` tags must have an explicit `aria-label` to provide context for screen readers. Furthermore, dynamically assigning `input.type` based on potentially arbitrary text like `innerText` (e.g., `input_name.type = element.innerText`) is dangerous and can lead to invalid input types, breaking default text input behaviors.
+**Action:** When adding or auditing inputs, always ensure an `aria-label` is present if there is no visible `<label>` text. Additionally, hardcode `input.type` (e.g., `"text"`) instead of relying on DOM text content.

@@ -189,6 +189,7 @@ class ImpresorItemHTML extends Impresor {
     const btn_opacity_icon = document.createElement("i");
     btn_opacity_icon.classList = "fa-solid fa-circle-half-stroke";
     btn_opacity_icon.title = "Modificar la opacidad de la capa";
+    btn_opacity_icon.setAttribute("aria-hidden", "true");
 
     /**
      * Adds a range input to change the layer's opacity
@@ -202,6 +203,7 @@ class ImpresorItemHTML extends Impresor {
     input_opacity.defaultValue = '1';
     input_opacity.style = 'width: auto; margin-left: 10px;';
     input_opacity.setAttribute("onInput", `overlayMaps['${item.nombre}'].setOpacity(this.value)`);
+    input_opacity.setAttribute("aria-label", "Opacidad de la capa");
 
     if (activated) {
       btn_options.style.display = "flex";
@@ -2743,7 +2745,7 @@ class GestorMenu {
         <form id='searchForm' class='searchFormBtn sticky' onSubmit='mainMenuSearch(event)'>
           <div class='center-flex'>
             <div class='has-feedback has-clear formBtns center-flex'>
-              <input type='text' class='form-control ag-input-text' id='q' name='q' value='${this.getQuerySearch()}' placeholder='Buscar capa'>
+              <input type='text' class='form-control ag-input-text' id='q' name='q' value='${this.getQuerySearch()}' placeholder='Buscar capa' aria-label='Buscar capa'>
               <button onClick='reloadMenu()' class='ag-btn ag-btn-secondary btn-reset-layers form-control-clear glyphicon glyphicon-remove-circle form-control-feedback hidden' aria-label='Limpiar búsqueda' title='Limpiar búsqueda'></button>
             </div>
             <button class='ag-btn ag-btn-secondary btn-search' type='submit' title='Buscar capa' aria-label='Buscar capa'>
@@ -3979,10 +3981,11 @@ class Menu_UI {
 
     let input_name = document.createElement("input");
     input_name.value = name;
-    input_name.type = element.innerText;
+    input_name.type = "text";
     input_name.className = "input_newname form-control";
     input_name.style = "width: 75% !important;";
     input_name.id = "i-" + id;
+    input_name.setAttribute("aria-label", "Nuevo nombre de la capa");
 
     input_name.autocomplete = "off";
     input_name.style = "height:22px!important;";
