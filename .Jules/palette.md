@@ -22,3 +22,7 @@
 ## 2024-11-20 - Incorrect aria-pressed usage on action buttons
 **Learning:** `aria-pressed` was incorrectly applied to a standard action button (Print/Save to PDF). This attribute is meant exclusively for toggleable buttons that hold a "pressed" state (like a mute button), not for buttons that trigger a one-off process. Adding `aria-pressed="false"` to a standard button misleads screen reader users into thinking it's a toggle button.
 **Action:** When auditing or implementing accessibility on buttons, only add `aria-pressed` if the button represents a state that can be toggled on/off. Remove it from simple action triggers.
+
+## 2024-05-18 - Proper method for setting ARIA labels dynamically
+**Learning:** In vanilla JavaScript, assigning `element.ariaLabel = "..."` does not consistently apply the `aria-label` attribute to the DOM across all browsers. When using direct property assignment, the attribute might not be serialized correctly or interpreted by screen readers.
+**Action:** When dynamically assigning ARIA attributes in vanilla JavaScript, always use the `element.setAttribute("aria-label", "...")` method to ensure consistency, correct rendering across the application, and full screen reader support.

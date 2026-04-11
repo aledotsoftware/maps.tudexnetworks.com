@@ -44,7 +44,7 @@ class Geoprocessing {
     const btnElement = document.createElement("button");
     btnElement.classList = "ag-btn ag-btn-primary menu-section-btn";
     btnElement.id = "geoprocesos-btn";
-    btnElement.ariaLabel = "Geoprocesos";
+    btnElement.setAttribute("aria-label", "Geoprocesos");
     btnElement.title = "Geoprocesos";
 
     // Icon options: fa-microchip, fa-screwdriver-wrench, fa-toolbox, fa-wand-magic-sparkles
