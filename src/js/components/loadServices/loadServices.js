@@ -50,7 +50,7 @@ class ModalService {
     form.innerHTML = `
     <div class="input-group center-flex">
       <span class="input-group-addon center-flex" id="basic-addon1"><i class="fas fa-link"></i></span>
-      <input value="" type='text' id='wms-input' class='form-control ag-input-text' name="input-url" placeholder="http://.../geoserver/ows?service=wms&version=1.3.0..." aria-describedby="basic-addon1">
+      <input value="" type='text' id='wms-input' class='form-control ag-input-text' name="input-url" placeholder="http://.../geoserver/ows?service=wms&version=1.3.0..." aria-describedby="basic-addon1" aria-label="URL del servicio WMS">
       <button class="input-group-addon ag-btn ag-btn-primary" id="buttonConectar" onclick="handleURLInput(event)">Conectar</button>
     </div>
   `;
@@ -90,7 +90,7 @@ class ModalService {
               <form class="title-service" submit="saveServiceTitle(${serviceID},event)">
 			  	<div class="hide-section-button" onclick="hideSection(event,'${serviceID}')">▼</div>
                 <h5 id="title-text-${serviceID}">${title}</h5>
-                <input type="text" class="title-input-service" id="title-input-${serviceID}">
+                <input type="text" class="title-input-service" id="title-input-${serviceID}" aria-label="Título del servicio">
               </form>
               `;
         let editButton = document.createElement("button");
@@ -247,7 +247,7 @@ async function handleURLInput(e) {
 		<form class="title-service" submit="saveServiceTitle(${serviceID},event)">
 			<div class="hide-section-button" onclick="hideSection(event,'${serviceID}')">▼</div>
 			<h5 id="title-text-${serviceID}">${title}</h5>
-			<input type="text" class="title-input-service" id="title-input-${serviceID}">
+			<input type="text" class="title-input-service" id="title-input-${serviceID}" aria-label="Título del servicio">
 		</form>
 		`;
       let editButton = document.createElement("button");
