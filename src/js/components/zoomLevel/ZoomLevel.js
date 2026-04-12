@@ -32,6 +32,7 @@ class ZoomLevel {
 
         const zoomIcon = document.createElement('i');
         zoomIcon.classList = 'fa fa-search-plus';
+        zoomIcon.setAttribute('aria-hidden', 'true');
 
         const valueContainer = document.createElement('div');
         valueContainer.id = 'zoom-container';
