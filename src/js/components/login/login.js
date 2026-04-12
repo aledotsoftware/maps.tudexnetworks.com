@@ -211,6 +211,7 @@ const login = {
     nPwd.classList.add("ag-input-text");
     nPwd.type = "password";
     nPwd.placeholder = "Nueva contraseña";
+    nPwd.setAttribute("aria-label", "Nueva contraseña");
     nPwd.required = true;
 
     // Change the text of the resetPwd button to "Confirm change"
