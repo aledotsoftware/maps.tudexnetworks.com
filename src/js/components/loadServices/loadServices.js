@@ -88,7 +88,7 @@ class ModalService {
         header.classList.add("page-header");
         header.innerHTML = `
               <form class="title-service" submit="saveServiceTitle(${serviceID},event)">
-			  	<div class="hide-section-button" onclick="hideSection(event,'${serviceID}')">▼</div>
+				<button type="button" class="hide-section-button" aria-expanded="true" aria-label="Alternar visibilidad de las capas" onclick="hideSection(event,'${serviceID}')">▼</button>
                 <h5 id="title-text-${serviceID}">${title}</h5>
                 <input type="text" class="title-input-service" id="title-input-${serviceID}" aria-label="Título del servicio">
               </form>
@@ -245,7 +245,7 @@ async function handleURLInput(e) {
       header.innerHTML = `
 		
 		<form class="title-service" submit="saveServiceTitle(${serviceID},event)">
-			<div class="hide-section-button" onclick="hideSection(event,'${serviceID}')">▼</div>
+			<button type="button" class="hide-section-button" aria-expanded="true" aria-label="Alternar visibilidad de las capas" onclick="hideSection(event,'${serviceID}')">▼</button>
 			<h5 id="title-text-${serviceID}">${title}</h5>
 			<input type="text" class="title-input-service" id="title-input-${serviceID}" aria-label="Título del servicio">
 		</form>
@@ -331,9 +331,11 @@ function hideSection(e, id) {
   if (labels[0].style.display == "none") {
     state = "block";
     e.target.style.transform = "rotate(0deg)";
+    e.target.setAttribute("aria-expanded", "true");
   } else {
     state = "none";
     e.target.style.transform = "rotate(-90deg)";
+    e.target.setAttribute("aria-expanded", "false");
   }
 
   for (let label of labels) {
