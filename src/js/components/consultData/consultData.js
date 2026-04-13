@@ -5,9 +5,9 @@ class ConsultData {
     // Initialize the HTML component for the control
     this.component = `
       <div id="iconCD-container" class="leaflet-disabled" title="Consultar Datos">
-        <a id="iconCD" role="button" tabindex="0" aria-label="Consultar datos" aria-pressed="false">
+        <button type="button" id="iconCD" tabindex="0" aria-label="Consultar datos" aria-pressed="false">
           <img src="src/styles/images/cursorQuery.png" width="60%" aria-hidden="true">
-        </a>
+        </button>
       </div>
     `;
   }

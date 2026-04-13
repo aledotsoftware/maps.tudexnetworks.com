@@ -1853,3 +1853,19 @@ input:checked.switch+label:after {
 .individualFeature > ul > li > span {
   float: right;
 } */
+.leaflet-bar button,
+.leaflet-bar button.leaflet-disabled {
+  color: var(--map-btn-color) !important;
+  background-color: var(--map-btn-bg-color);
+  border: none;
+  padding: 0;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.leaflet-bar button:hover {
+  background-color: var(--layer-btn-hover-color);
+}

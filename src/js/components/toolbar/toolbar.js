@@ -25,7 +25,8 @@ class ToolbarVisibilityToggler {
     elem.setAttribute("aria-expanded", "true");
     elem.dataset.baseTitle = title.replace("Esconder ", "").replace("Mostrar ", ""); // e.g. "herramientas"
 
-    const elemIcon = document.createElement("a");
+    const elemIcon = document.createElement("button");
+    elemIcon.type = "button";
     elemIcon.id = id;
     elemIcon.innerHTML = `<span id="map-toolbar-span" class="${iconClass}" aria-hidden="true"></span>`;
     elem.appendChild(elemIcon);

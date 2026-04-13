@@ -3,9 +3,9 @@ var LOAD_LAYERS_MODAL_OPEN = false;
 class LoadLayersModal {
   constructor() {
     this.component = `
-        <a id="loadLayersButtonContent" class="center-flex" role="button" tabindex="0" aria-label="Agregar capas">
+        <button type="button" id="loadLayersButtonContent" class="center-flex" tabindex="0" aria-label="Agregar capas">
             <img src="src/js/components/loadLayersModal/add-layers-icon.svg" width="17" height="17" alt="">
-        </a>
+        </button>
     `;
   }
   createComponent() {

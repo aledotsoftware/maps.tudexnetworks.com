@@ -220,3 +220,15 @@
     width: 80%;
   }
 }
+
+.about-exit {
+  background: transparent;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  color: var(--text-color, #333);
+}
+
+.about-exit:hover {
+  opacity: 0.7;
+}

@@ -20,7 +20,8 @@ class AboutUsModal {
     aboutLogo.src = "src/styles/images/argenmap-banner.webp";
     aboutLogo.className = "about-logo";
 
-    const aboutExitBtn = document.createElement("a");
+    const aboutExitBtn = document.createElement("button");
+    aboutExitBtn.type = "button";
     aboutExitBtn.id = "aboutExitBtn";
     aboutExitBtn.classList = "about-exit";
     aboutExitBtn.setAttribute("role", "button");

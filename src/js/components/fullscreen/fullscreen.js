@@ -12,9 +12,9 @@ class Fullscreen {
      * @type {string}
      */
     this.component = `
-      <a id="iconFS-container" title="Pantalla Completa" role="button" tabindex="0" aria-pressed="false" aria-label="Pantalla completa">
+      <button type="button" id="iconFS-container" title="Pantalla Completa" tabindex="0" aria-pressed="false" aria-label="Pantalla completa">
         <i id="iconFS" class="fas fa-expand" aria-hidden="true"></i>
-      </a>
+      </button>
     `;
     /**
      * Referencia al elemento del control en el DOM.
