@@ -27,7 +27,19 @@
   width: 300px;
   margin: 15px auto;
 }
-/*.about-exit {}*/
+.about-exit {
+  background: none;
+  border: none;
+  padding: 0;
+  cursor: pointer;
+  line-height: 1;
+  align-self: center;
+}
+.about-exit:focus-visible {
+  outline: 2px solid var(--btn-primary-color, #3174bf);
+  outline-offset: 2px;
+  border-radius: 4px;
+}
 .about-main-section {
   display: flex;
   flex-direction: column;
