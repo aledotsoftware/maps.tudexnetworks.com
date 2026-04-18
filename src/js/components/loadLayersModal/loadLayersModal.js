@@ -3,8 +3,8 @@ var LOAD_LAYERS_MODAL_OPEN = false;
 class LoadLayersModal {
   constructor() {
     this.component = `
-        <a id="loadLayersButtonContent" class="center-flex" role="button" tabindex="0" aria-label="Agregar capas">
-            <img src="src/js/components/loadLayersModal/add-layers-icon.svg" width="17" height="17" alt="">
+        <a id="loadLayersButtonContent" class="center-flex" role="button" tabindex="0" aria-label="Agregar capas" aria-expanded="false">
+            <img src="src/js/components/loadLayersModal/add-layers-icon.svg" width="17" height="17" alt="" aria-hidden="true">
         </a>
     `;
   }
@@ -128,16 +128,19 @@ class modalUI {
   }
 
   open() {
+    const btn = document.getElementById("loadLayersButtonContent");
     if (!LOAD_LAYERS_MODAL_OPEN) {
       modal.createModal();
       modal.showActions(0);
       LOAD_LAYERS_MODAL_OPEN = true;
+      if (btn) btn.setAttribute('aria-expanded', 'true');
     } else {
       const modalElem = document.getElementById("loadLayersModal");
       if (modalElem) {
         document.getElementById("load-layer").removeChild(modalElem);
       }
       LOAD_LAYERS_MODAL_OPEN = false;
+      if (btn) btn.setAttribute('aria-expanded', 'false');
     }
   }
 
