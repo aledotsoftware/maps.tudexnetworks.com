@@ -135,6 +135,7 @@ class Accessibility {
     resetButton.classList.add('reset-btn', 'ag-btn-danger');
     resetButton.setAttribute('title', 'Restaurar configuración de accesibilidad');
     resetButton.setAttribute('aria-label', 'Restaurar configuración de accesibilidad');
+    resetButton.removeAttribute('aria-pressed'); // Action button, not a toggle
     resetButton.addEventListener('click', () => this.toggleResetButtonVisibility(resetButton));
 
     // Append the title and reset button to the header
@@ -232,11 +233,10 @@ class Accessibility {
    */
   createAccessibilityButton(title, id, icon, action) {
     // Create the button container
-    const button = this.createElement("div", `${id}-btn`, "ag-btn ag-btn-secondary accessibility-btn");
+    const button = this.createElement("button", `${id}-btn`, "ag-btn ag-btn-secondary accessibility-btn");
+    button.type = "button";
     button.setAttribute("title", title);
     button.setAttribute("aria-label", title);
-    button.setAttribute("role", "button");
-    button.setAttribute("tabindex", "0");
     button.setAttribute("aria-pressed", "false");
 
     // Create and append the icon element
@@ -250,14 +250,6 @@ class Accessibility {
 
     // Attach the click event listener
     button.addEventListener("click", action);
-
-    // Attach keyboard event listener for accessibility
-    button.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        action(e);
-      }
-    });
 
     return button;
   }
