@@ -49,9 +49,9 @@ class PdfPrinter {
      * @type {string}
      */
     this.component = `
-      <a class="iconPDF-container" title="Imprimir/ Guardar en PDF" role="button" tabindex="0" aria-label="Imprimir o guardar en PDF">
+      <button type="button" class="iconPDF-container" title="Imprimir/ Guardar en PDF" aria-label="Imprimir o guardar en PDF">
         <i id="iconPDF" class="fas fa-print" aria-hidden="true"></i>
-      </a>
+      </button>
     `;
 
     /**
@@ -100,11 +100,6 @@ class PdfPrinter {
       // Configurar accesibilidad y eventos
       const icon = elem.querySelector('.iconPDF-container');
       if (icon) {
-        // Soporte de teclado para accesibilidad
-        const keydownHandler = this.#onKeyDown.bind(this);
-        icon.addEventListener('keydown', keydownHandler);
-        this.handlers.push({ el: icon, type: 'keydown', fn: keydownHandler });
-
         // Event handler para click
         const clickHandler = this.print.bind(this);
         icon.onclick = clickHandler;
@@ -129,18 +124,6 @@ class PdfPrinter {
     } catch (e) {
       console.error('Error creando el componente PdfPrinter:', e);
       throw e;
-    }
-  }
-
-  /**
-   * Maneja eventos de teclado para accesibilidad.
-   * @param {KeyboardEvent} e
-   * @private
-   */
-  #onKeyDown(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      this.print();
     }
   }
 

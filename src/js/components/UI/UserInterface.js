@@ -20,11 +20,10 @@ class AboutUsModal {
     aboutLogo.src = "src/styles/images/argenmap-banner.webp";
     aboutLogo.className = "about-logo";
 
-    const aboutExitBtn = document.createElement("a");
+    const aboutExitBtn = document.createElement("button");
+    aboutExitBtn.type = "button";
     aboutExitBtn.id = "aboutExitBtn";
     aboutExitBtn.classList = "about-exit";
-    aboutExitBtn.setAttribute("role", "button");
-    aboutExitBtn.setAttribute("tabindex", "0");
     aboutExitBtn.setAttribute("aria-label", "Cerrar modal Acerca de");
     aboutExitBtn.innerHTML = '<i class="fa fa-times" aria-hidden="true"></i>';
 
@@ -38,12 +37,6 @@ class AboutUsModal {
     };
 
     aboutExitBtn.onclick = closeAboutUsModal;
-    aboutExitBtn.onkeydown = (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        closeAboutUsModal();
-      }
-    };
 
     const aboutMainSection = document.createElement("div");
     aboutMainSection.className = "about-main-section";
