@@ -12,9 +12,9 @@ class Fullscreen {
      * @type {string}
      */
     this.component = `
-      <a id="iconFS-container" title="Pantalla Completa" role="button" tabindex="0" aria-pressed="false" aria-label="Pantalla completa">
+      <button type="button" id="iconFS-container" title="Pantalla Completa" aria-pressed="false" aria-label="Pantalla completa">
         <i id="iconFS" class="fas fa-expand" aria-hidden="true"></i>
-      </a>
+      </button>
     `;
     /**
      * Referencia al elemento del control en el DOM.
@@ -37,12 +37,7 @@ class Fullscreen {
       elem.className = "leaflet-bar leaflet-control";
       elem.id = "fullscreen";
       elem.innerHTML = this.component;
-      // Accesibilidad: soporte de teclado
-      const icon = elem.querySelector('#iconFS-container');
-      if (icon) {
-        icon.addEventListener('keydown', this.#onKeyDown.bind(this));
-        this.handlers.push({el: icon, type: 'keydown', fn: this.#onKeyDown.bind(this)});
-      }
+
       elem.onclick = this.toggleFullScreen.bind(this);
       this.handlers.push({el: elem, type: 'click', fn: elem.onclick});
       const container = document.querySelector(".leaflet-top.leaflet-left");
@@ -50,18 +45,6 @@ class Fullscreen {
       this.elem = elem;
     } catch (e) {
       console.error('Error creando el componente Fullscreen:', e);
-    }
-  }
-
-  /**
-   * Maneja eventos de teclado para accesibilidad.
-   * @param {KeyboardEvent} e
-   * @private
-   */
-  #onKeyDown(e) {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      this.toggleFullScreen();
     }
   }
 
