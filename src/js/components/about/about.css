@@ -27,7 +27,17 @@
   width: 300px;
   margin: 15px auto;
 }
-/*.about-exit {}*/
+.about-exit {
+  border: none;
+  background: transparent;
+  padding: 0;
+  cursor: pointer;
+  line-height: 1;
+}
+.about-exit:focus-visible {
+  outline: 2px solid var(--btn-primary-color, #17608e);
+  outline-offset: 2px;
+}
 .about-main-section {
   display: flex;
   flex-direction: column;

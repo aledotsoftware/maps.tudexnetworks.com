@@ -3,9 +3,9 @@ var LOAD_LAYERS_MODAL_OPEN = false;
 class LoadLayersModal {
   constructor() {
     this.component = `
-        <a id="loadLayersButtonContent" class="center-flex" role="button" tabindex="0" aria-label="Agregar capas" aria-expanded="false">
+        <button type="button" id="loadLayersButtonContent" class="center-flex" aria-label="Agregar capas" aria-expanded="false">
             <img src="src/js/components/loadLayersModal/add-layers-icon.svg" width="17" height="17" alt="" aria-hidden="true">
-        </a>
+        </button>
     `;
   }
   createComponent() {
@@ -18,12 +18,6 @@ class LoadLayersModal {
     const btn = elem.querySelector('#loadLayersButtonContent');
     if (btn) {
       btn.onclick = () => modal.open();
-      btn.onkeydown = (e) => {
-        if (e.key === "Enter" || e.key === " ") {
-          e.preventDefault();
-          modal.open();
-        }
-      };
     }
 
     if (loadAddLayer) {
