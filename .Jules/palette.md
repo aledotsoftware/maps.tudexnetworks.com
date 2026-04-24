@@ -12,3 +12,6 @@
 ## 2024-04-22 - Replacing non-interactive tags with native buttons
 **Learning:** Custom UI elements like "close modal" buttons are often incorrectly implemented as `<a>` tags with `role="button"` and `tabindex="0"`, requiring manual handling of `keydown` events for space/enter.
 **Action:** Refactor these to native `<button type="button">` to ensure built-in keyboard accessibility and native event handling. Apply proper reset styles (`border: none; background: transparent; padding: 0; cursor: pointer;`) and explicitly define `:focus-visible` to guarantee keyboard focus indicators without relying on complex custom event listeners.
+## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
+**Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
+**Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
