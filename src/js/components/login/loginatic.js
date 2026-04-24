@@ -166,6 +166,7 @@ loginatic = function () {
     logoutButton.className = "ag-btn ag-btn-primary btn-logout";
     logoutButton.id = "btn-logout";
     logoutButton.title = "Cerrar sesión";
+    logoutButton.setAttribute("aria-label", "Cerrar sesión");
     logoutButton.onclick = function () {
       loginatic.logout();
     };
