@@ -825,19 +825,28 @@ a.item-group-title:hover {
   color: black;
 }
 
-.zoom-layer,
-.zoom-layer-combobox {
+button.zoom-layer,
+button.zoom-layer-combobox {
   cursor: pointer;
   width: 10%;
   /* color: silver; */
   opacity: 0.7;
   margin-left: 5%;
+  background: transparent;
+  border: none;
+  padding: 0;
 }
 
-.zoom-layer:hover,
-.zoom-layer-combobox:hover {
+button.zoom-layer:hover,
+button.zoom-layer-combobox:hover {
   /* color: black; */
   opacity: 1;
+}
+
+button.zoom-layer:focus-visible,
+button.zoom-layer-combobox:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
 }
 
 .resize-legend-combobox {
