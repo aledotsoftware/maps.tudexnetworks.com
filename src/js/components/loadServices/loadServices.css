@@ -107,11 +107,19 @@
   color: #27168830;
   margin-right: 4px;
 }
-.loadservice-layer-img {
+button.loadservice-layer-img {
   cursor: pointer;
   width: 15%;
   text-align: center;
   opacity: 0.6;
+  background: transparent;
+  border: none;
+  padding: 0;
+}
+
+button.loadservice-layer-img:focus-visible {
+  outline: 2px solid var(--primary-color, #17608e);
+  outline-offset: 2px;
 }
 .loadservice-layer-img img {
   height: 20px;
