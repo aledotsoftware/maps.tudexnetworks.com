@@ -17,33 +17,28 @@ class ToolbarVisibilityToggler {
     const elem = document.createElement("div");
     elem.className = "leaflet-bar leaflet-control";
     elem.id = btnId;
-    elem.title = title;
-    elem.style = "cursor: pointer;";
-    elem.setAttribute("role", "button");
-    elem.setAttribute("tabindex", "0");
-    elem.setAttribute("aria-label", title);
-    elem.setAttribute("aria-expanded", "true");
-    elem.dataset.baseTitle = title.replace("Esconder ", "").replace("Mostrar ", ""); // e.g. "herramientas"
+    elem.style = "cursor: pointer; border: none;";
 
-    const elemIcon = document.createElement("a");
+    const elemIcon = document.createElement("button");
+    elemIcon.type = "button";
     elemIcon.id = id;
+    elemIcon.title = title;
+
+    elemIcon.setAttribute("aria-label", title);
+    elemIcon.setAttribute("aria-expanded", "true");
+    elemIcon.dataset.baseTitle = title.replace("Esconder ", "").replace("Mostrar ", ""); // e.g. "herramientas"
+
     elemIcon.innerHTML = `<span id="map-toolbar-span" class="${iconClass}" aria-hidden="true"></span>`;
     elem.appendChild(elemIcon);
 
     // Event listener for keyboard support
-    elem.addEventListener("keydown", (e) => {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        e.stopPropagation();
-        elem.click();
-      }
-    });
+
 
     // Event listener to toggle visibility of map buttons on click
-    elem.addEventListener("click", (e) => {
+    elemIcon.addEventListener("click", (e) => {
       e.stopPropagation(); // Prevent click event propagation
       // If e.target isn't the outer div, we can fall back to 'elem' which is lexically scoped
-      const targetElem = e.target.closest('.leaflet-bar') || elem;
+      const targetElem = elem;
       const targetBtnId = targetElem.id || btnId;
 
       const btnToolId =
@@ -65,7 +60,7 @@ class ToolbarVisibilityToggler {
     });
 
     // Event listener to prevent zoom on double-click
-    elem.addEventListener("dblclick", (e) => {
+    elemIcon.addEventListener("dblclick", (e) => {
       e.stopPropagation(); // Prevent double-click event propagation
     });
 
@@ -100,8 +95,8 @@ class ToolbarVisibilityToggler {
     });
 
     // Update the visibility toggler buttons to reflect state
-    const rightBtn = document.getElementById("hideBtnRight");
-    const leftBtn = document.getElementById("hideBtnLeft");
+    const rightBtn = document.getElementById("map-toolbar-icon-right");
+    const leftBtn = document.getElementById("map-toolbar-icon-left");
 
     [rightBtn, leftBtn].forEach(btn => {
       if (btn) {
