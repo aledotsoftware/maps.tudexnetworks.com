@@ -134,7 +134,28 @@ loginatic = function () {
                         <span class="input-group-addon" id="basic-addon1">
                         <i class="fas fa-lock"></i>
                         </span>
-                        <input type="password" onkeyup="if (event.keyCode == 13) loginatic.process();" id="input-pwd" class="form-control ag-input-text" placeholder="Clave de Acceso" aria-describedby="basic-addon1" onfocus="if(this.value.trim()=='') this.placeholder='';" onblur="if(this.value.trim()=='') this.placeholder='Clave de Acceso';" required>
+                        <input type="password" onkeyup="if (event.keyCode == 13) { loginatic.process(); } if(this.value.length > 0) { document.getElementById('show_password').style.display='inline-block'; } else { document.getElementById('show_password').style.display='none'; }" id="input-pwd" class="form-control ag-input-text" placeholder="Clave de Acceso" aria-describedby="basic-addon1" onfocus="if(this.value.trim()=='') this.placeholder='';" onblur="if(this.value.trim()=='') this.placeholder='Clave de Acceso';" required>
+                        <span class="input-group-btn" style="position: absolute; right: 0; top: 0; z-index: 10;">
+                          <button id="show_password" class="btn btn-default" type="button" style="display: none; height: 34px; border-left: 0; background: transparent;" aria-label="Mostrar contraseña" title="Mostrar contraseña" onclick="
+                            const pwd = document.getElementById('input-pwd');
+                            const icon = this.querySelector('i');
+                            if (pwd.type === 'password') {
+                              pwd.type = 'text';
+                              icon.classList.remove('fa-eye');
+                              icon.classList.add('fa-eye-slash');
+                              this.setAttribute('aria-label', 'Ocultar contraseña');
+                              this.setAttribute('title', 'Ocultar contraseña');
+                            } else {
+                              pwd.type = 'password';
+                              icon.classList.remove('fa-eye-slash');
+                              icon.classList.add('fa-eye');
+                              this.setAttribute('aria-label', 'Mostrar contraseña');
+                              this.setAttribute('title', 'Mostrar contraseña');
+                            }
+                          ">
+                            <i class="fas fa-eye" aria-hidden="true"></i>
+                          </button>
+                        </span>
                     </div>
                     <div class="checkbox">
                         <label><input type="checkbox" id="inp-recuerdame" name="recuerdame">Recuérdame</label>

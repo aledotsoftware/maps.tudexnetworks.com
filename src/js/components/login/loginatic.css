@@ -121,3 +121,26 @@
   font-size: 16px;
   float: right;
 }
+
+
+.login .input-group {
+    position: relative;
+    display: flex;
+    width: 100%;
+}
+
+.login .input-group-addon {
+    border-right: 0;
+}
+
+.login .input-group-btn {
+    position: absolute;
+    right: 0;
+    top: 0;
+    z-index: 10;
+}
+
+.login .input-group-btn .btn:focus-visible {
+    outline: 2px solid var(--primary-color, #0056b3);
+    outline-offset: -2px;
+}
