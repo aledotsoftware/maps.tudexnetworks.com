@@ -78,6 +78,7 @@ html, body {
   border-radius: 10px;
   padding: 10px 14px;
   cursor: pointer;
+  outline: none;
 }
 
 .btn option {
@@ -103,6 +104,16 @@ html, body {
   background: rgba(8, 12, 20, 0.72);
   font-size: 18px;
   cursor: pointer;
+  outline: none;
+}
+
+#search-input:focus-visible,
+#route-from:focus-visible,
+#route-to:focus-visible,
+.btn:focus-visible,
+.ctrl:focus-visible {
+  outline: 2px solid #7ba8ff;
+  outline-offset: -1px;
 }
 
 .route-panel {
