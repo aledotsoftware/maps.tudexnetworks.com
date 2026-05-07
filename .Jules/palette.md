@@ -15,3 +15,7 @@
 ## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
 **Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
 **Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
+
+## 2024-05-18 - Accessibility: Interactive Map Control Elements
+**Learning:** Map controls (like zoom or orientation buttons) that are just icons (`+`, `-`, `N`, `◎`) need to be accessible. Since they are visually understood but unreadable by screen readers, `aria-label` is crucial. Providing a `title` also gives sighted users hover tooltips to understand ambiguous icons. Adding a global `:focus-visible` to interactive elements ensures keyboard navigability across the application UI without needing repetitive CSS.
+**Action:** Always pair `aria-label` and `title` attributes on icon-only buttons to serve both assistive technology users and sighted mouse users. Make sure to define `:focus-visible` uniformly on interactive components like `.btn` and `.ctrl`.
