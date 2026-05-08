@@ -47,6 +47,15 @@ html, body {
   border-color: #7ba8ff;
 }
 
+#search-input:focus-visible,
+#route-from:focus-visible,
+#route-to:focus-visible,
+.btn:focus-visible,
+.ctrl:focus-visible {
+  outline: 2px solid #7ba8ff;
+  outline-offset: 2px;
+}
+
 .search-results {
   position: absolute;
   top: 44px;

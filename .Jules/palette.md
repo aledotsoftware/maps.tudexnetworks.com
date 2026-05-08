@@ -15,3 +15,7 @@
 ## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
 **Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
 **Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
+
+## 2024-05-08 - Cleaning up scratchpad files
+**Learning:** Using scratchpad files like `plan.md` or writing temporary test scripts (like `verify_ui.js` using Playwright) directly in the repository root without removing them leads to a polluted git history. This was highlighted as a nitpick in code review.
+**Action:** When performing frontend visual verification or planning using temporary files, ensure that generated screenshot artifacts (e.g., `.png` files), test scripts, and scratchpads are removed via bash commands (e.g. `rm plan.md`) or ignored via `.gitignore` and never committed to version control.
