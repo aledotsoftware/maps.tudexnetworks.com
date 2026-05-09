@@ -11,15 +11,15 @@
 
   <div class="topbar">
     <div class="search-wrap">
-      <input id="search-input" type="text" placeholder="Buscar ciudad, calle o lugar" autocomplete="off" />
+      <input id="search-input" type="text" placeholder="Buscar ciudad, calle o lugar" autocomplete="off" aria-label="Buscar ciudad, calle o lugar" />
       <div id="search-results" class="search-results"></div>
     </div>
-    <select id="basemap-select" class="btn">
+    <select id="basemap-select" class="btn" aria-label="Seleccionar mapa base">
       <option value="osm">Calles</option>
       <option value="sat">Satélite</option>
       <option value="topo">Topográfico</option>
     </select>
-    <select id="projection-select" class="btn">
+    <select id="projection-select" class="btn" aria-label="Seleccionar proyección">
       <option value="globe">Globo</option>
       <option value="mercator">Mercator</option>
       <option value="equidistant">Equidistante</option>
@@ -29,10 +29,10 @@
   </div>
 
   <div class="controls">
-    <button id="zoom-in" class="ctrl">+</button>
-    <button id="zoom-out" class="ctrl">-</button>
-    <button id="reset-north" class="ctrl">N</button>
-    <button id="locate-me" class="ctrl">◎</button>
+    <button id="zoom-in" class="ctrl" title="Acercar" aria-label="Acercar">+</button>
+    <button id="zoom-out" class="ctrl" title="Alejar" aria-label="Alejar">-</button>
+    <button id="reset-north" class="ctrl" title="Restaurar norte" aria-label="Restaurar norte">N</button>
+    <button id="locate-me" class="ctrl" title="Mi ubicación" aria-label="Mi ubicación">◎</button>
   </div>
 
   <div id="layers-panel" class="route-panel">
@@ -42,8 +42,8 @@
   </div>
 
   <div id="route-panel" class="route-panel hidden route-position">
-    <input id="route-from" type="text" placeholder="Origen" />
-    <input id="route-to" type="text" placeholder="Destino" />
+    <input id="route-from" type="text" placeholder="Origen" aria-label="Origen de la ruta" />
+    <input id="route-to" type="text" placeholder="Destino" aria-label="Destino de la ruta" />
     <button id="route-build" class="btn">Trazar ruta</button>
     <div id="route-info"></div>
   </div>
