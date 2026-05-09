@@ -15,3 +15,7 @@
 ## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
 **Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
 **Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
+
+## 2024-05-09 - Accessible labels and tooltips for map controls
+**Learning:** Map controls utilizing single characters (like '+', '-', 'N', '◎') or input fields that do not have visually associated `<label>` tags must include both `aria-label`s and/or `title` attributes to ensure clear discoverability and necessary context for screen readers.
+**Action:** When auditing or implementing map UI or custom form components, explicitly look for buttons with non-text or single-character content, and inputs lacking labels. Always add `aria-label` attributes to these inputs, and both `aria-label` and `title` to the buttons.
