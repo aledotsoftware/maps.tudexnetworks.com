@@ -15,3 +15,6 @@
 ## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
 **Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
 **Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
+## 2026-05-11 - Accessibility: HTML file syntax checking
+**Learning:** To verify the syntax of an HTML file in a repository that lacks project-specific tests or linters, the `node --check` command will fail because it only supports JavaScript.
+**Action:** Install `htmlhint` globally (`npm install -g htmlhint`) and run it against the target HTML file (e.g., `htmlhint index.html`) to quickly and reliably catch syntax errors before committing.
