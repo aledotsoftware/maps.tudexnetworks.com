@@ -3,7 +3,7 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Maps Tudex - V2 Deep Night</title>
+  <title>GeoCore Map Engine - Soberanía Cartográfica</title>
   <style>
     body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #0B0D17; }
     #map-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
@@ -11,38 +11,60 @@
     /* Frutiger Aero / Glassmorphism UI */
     .topbar {
       position: absolute;
-      top: 20px;
+      top: 25px;
       left: 50%;
       transform: translateX(-50%);
       display: flex;
+      align-items: center;
       gap: 15px;
-      padding: 10px 20px;
+      padding: 12px 25px;
       background: rgba(11, 13, 23, 0.4);
-      backdrop-filter: blur(12px);
-      -webkit-backdrop-filter: blur(12px);
-      border: 1px solid rgba(100, 255, 218, 0.2);
-      border-radius: 20px;
-      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      backdrop-filter: blur(16px) saturate(180%);
+      -webkit-backdrop-filter: blur(16px) saturate(180%);
+      border: 1px solid rgba(100, 255, 218, 0.25);
+      border-radius: 50px; /* Bubble style */
+      box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5), inset 0 1px 1px rgba(255, 255, 255, 0.1);
       z-index: 1000;
     }
 
     .btn {
-      background: rgba(255, 255, 255, 0.05);
-      border: 1px solid rgba(255, 255, 255, 0.1);
-      color: #CCD6F6;
-      padding: 8px 16px;
-      border-radius: 12px;
+      background: linear-gradient(135deg, rgba(100, 255, 218, 0.1) 0%, rgba(100, 255, 218, 0.05) 100%);
+      border: 1px solid rgba(100, 255, 218, 0.3);
+      color: #64FFDA;
+      padding: 10px 20px;
+      border-radius: 25px;
       cursor: pointer;
-      transition: all 0.3s ease;
-      font-size: 14px;
+      transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+      font-size: 13px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
       outline: none;
+      position: relative;
+      overflow: hidden;
+    }
+
+    .btn::before {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle, rgba(255,255,255,0.1) 0%, transparent 70%);
+      transition: all 0.5s ease;
+      opacity: 0;
     }
 
     .btn:hover {
-      background: rgba(100, 255, 218, 0.15);
-      border-color: rgba(100, 255, 218, 0.5);
-      box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
-      color: #64FFDA;
+      transform: translateY(-2px) scale(1.05);
+      border-color: #64FFDA;
+      box-shadow: 0 0 20px rgba(100, 255, 218, 0.4);
+      background: rgba(100, 255, 218, 0.2);
+    }
+
+    .btn:hover::before {
+      opacity: 1;
     }
 
     #search-input {
@@ -50,9 +72,10 @@
       border: none;
       color: #FFF;
       outline: none;
-      width: 250px;
+      width: 280px;
+      font-size: 15px;
     }
-    #search-input::placeholder { color: rgba(255,255,255,0.5); }
+    #search-input::placeholder { color: rgba(100, 255, 218, 0.4); }
   </style>
 </head>
 <body>
@@ -60,6 +83,7 @@
 
   <div class="topbar">
     <input id="search-input" type="text" placeholder="Buscar lugar..." />
+    <button class="btn" id="btn-projection">Cambiar Proyección</button>
     <button class="btn" id="btn-layer">Cargar Capa Local</button>
     <button class="btn" id="btn-3d">Vista 3D</button>
   </div>

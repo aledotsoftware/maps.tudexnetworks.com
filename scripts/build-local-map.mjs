@@ -11,14 +11,22 @@ const BBOX = '-62.4500,-38.8500,-62.1000,-38.6000';
 const run = async () => {
   console.log('🌎 [Map Builder] Iniciando la generación 100% local del mapa (Soberanía de Datos)...');
   
-  await fs.mkdir(DATA_DIR, { recursive: true });
+  const MBTILES_PATH = path.join(DATA_DIR, 'bahia-blanca.mbtiles');
+  
+  try {
+    await fs.access(MBTILES_PATH);
+    console.log(`\nℹ️  [Skip] El archivo ${MBTILES_PATH} ya existe. Saltando generación para ahorrar ancho de banda.`);
+    console.log('   Si deseas regenerarlo, elimina el archivo de la carpeta /data y vuelve a ejecutar este script.');
+    return;
+  } catch {
+    // Si no existe, procedemos
+  }
 
   console.log('\n📥 [Paso 1] Descargando y procesando OSM Data con Planetiler...');
   console.log('   (Esto descargará la metadata de Argentina y compilará un archivo Vector Tile .mbtiles específico para Bahía Blanca)');
   
-  // Usamos Docker para correr onthegomap/planetiler, el compilador open-source de teselados más rápido del mundo.
-  // Automáticamente descarga la data más reciente de Geofabrik.
-  const planetilerCmd = `docker run --rm -v "${DATA_DIR}:/data" onthegomap/planetiler:latest --area=argentina --bounds=${BBOX} --output=/data/bahia-blanca.mbtiles`;
+  // Usamos Docker para correr planetiler desde GHCR (más confiable).
+  const planetilerCmd = `docker run --rm -v "${DATA_DIR}:/data" ghcr.io/onthegomap/planetiler:latest --area=argentina --bounds=${BBOX} --download --output=/data/bahia-blanca.mbtiles`;
   
   try {
     // Ejecutamos la compilación. (Puede tardar entre 1 y 5 minutos dependiendo del hardware y conexión).

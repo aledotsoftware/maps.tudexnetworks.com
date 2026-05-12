@@ -1,14 +1,14 @@
 {
-  "name": "maps.tudexnetworks.com",
+  "name": "geocore-map-engine",
   "version": "1.0.0",
-  "description": "---",
+  "description": "GeoCore Map Engine - Soberanía Cartográfica",
   "main": "update_patch.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/aledotsoftware/maps.tudexnetworks.com.git"
+    "url": "git+https://github.com/aledotsoftware/geocore-map-engine.git"
   },
   "keywords": [],
   "author": "",

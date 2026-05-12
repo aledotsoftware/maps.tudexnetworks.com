@@ -1,42 +1,41 @@
-import { MapEngine } from './MapEngine.js';
+import { createMapEngine } from './engine/index.js';
+import { layerPlugin } from './plugins/layerPlugin.js';
+import { projectionPlugin } from './plugins/projectionPlugin.js';
 
-// Setup Service Worker for aggressive caching
-if ('serviceWorker' in navigator) {
-  window.addEventListener('load', () => {
-    navigator.serviceWorker.register('/sw.js').then((registration) => {
-      console.log('SW registered: ', registration);
-    }).catch((registrationError) => {
-      console.log('SW registration failed: ', registrationError);
-    });
+/**
+ * 🚀 GeoCore App Initialization
+ */
+
+const startApplication = async () => {
+  const engine = createMapEngine('map-container', {
+    zoom: 13,
+    pitch: 60
   });
-}
 
-// Instantiate modern map engine
-const initApp = async () => {
-  const engine = new MapEngine('map-container');
-  await engine.init();
+  engine.use(layerPlugin);
+  engine.use(projectionPlugin);
 
-  // Test the Custom Layers Plugin Interface (Simulating CDN-Mesh injection)
-  engine.layerManager.addCustomLayer('tudex-zone-alpha', {
+  const { layers, projections } = await engine.init();
+
+  // Setup UI Interactions
+  document.getElementById('btn-projection').addEventListener('click', () => {
+    const current = engine.map.getProjection().name;
+    projections.set(current === 'globe' ? 'mercator' : 'globe');
+  });
+
+  // Test Layer
+  layers.add('geocore-center', {
     type: 'FeatureCollection',
     features: [{
       type: 'Feature',
-      properties: {},
-      geometry: {
-        type: 'Polygon',
-        coordinates: [[
-          [-84.0, 58.0],
-          [-82.0, 58.0],
-          [-82.0, 59.0],
-          [-84.0, 59.0],
-          [-84.0, 58.0]
-        ]]
-      }
+      properties: { name: 'GeoCore Alpha Node' },
+      geometry: { type: 'Point', coordinates: [-62.272, -38.718] }
     }]
-  }, { color: '#64FFDA', opacity: 0.3 });
+  }, { 
+    style: { color: '#64FFDA', opacity: 0.6, glow: true } 
+  });
 
-  // Expose for testing
-  window.TudexMaps = engine;
+  window.GeoCore = engine;
 };
 
-initApp();
+startApplication().catch(console.error);

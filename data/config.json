@@ -1,0 +1,12 @@
+{
+  "options": {
+    "paths": {
+      "mbtiles": "/data"
+    }
+  },
+  "data": {
+    "bahia-blanca": {
+      "mbtiles": "bahia-blanca.mbtiles"
+    }
+  }
+}

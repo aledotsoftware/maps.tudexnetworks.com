@@ -35,8 +35,8 @@ const createBaseStyle = () => ({
   sources: {
     'openmaptiles': {
       type: 'vector',
-      // Conexión a tu Servidor Local de Teselados (Generados con Planetiler)
-      url: 'http://localhost:8080/data/v3.json'
+      // Conexión a tu Servidor Local de Teselados de Bahía Blanca
+      url: 'http://localhost:8080/data/bahia-blanca.json'
     }
   },
   // Apuntamos a los sprites y fuentes open-source válidos para evitar errores 404
