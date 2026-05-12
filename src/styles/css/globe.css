@@ -85,6 +85,11 @@ html, body {
   color: #d8e7ff;
 }
 
+.btn.active {
+  border-color: rgba(255, 182, 92, 0.8);
+  box-shadow: 0 0 0 1px rgba(255, 182, 92, 0.35) inset;
+}
+
 .controls {
   position: fixed;
   right: 16px;
@@ -103,6 +108,11 @@ html, body {
   background: rgba(8, 12, 20, 0.72);
   font-size: 18px;
   cursor: pointer;
+}
+
+.ctrl.active {
+  border-color: rgba(255, 182, 92, 0.8);
+  box-shadow: 0 0 0 1px rgba(255, 182, 92, 0.35) inset;
 }
 
 .route-panel {
@@ -208,4 +218,21 @@ html, body {
   line-height: 1.45;
   padding: 10px;
   white-space: pre-wrap;
+}
+
+.astro-legend {
+  position: fixed;
+  right: 16px;
+  top: 70px;
+  z-index: 6;
+  min-width: 220px;
+  max-width: 320px;
+  background: rgba(7, 10, 18, 0.82);
+  border: 1px solid rgba(120, 170, 255, 0.35);
+  border-radius: 8px;
+  color: #d8e7ff;
+  font-size: 11px;
+  line-height: 1.45;
+  padding: 10px;
+  white-space: pre-line;
 }

@@ -15,6 +15,7 @@
       <div id="search-results" class="search-results"></div>
     </div>
     <select id="basemap-select" class="btn">
+      <option value="tudex">Tudex</option>
       <option value="osm">Calles</option>
       <option value="sat">Satélite</option>
       <option value="topo">Topográfico</option>
@@ -24,6 +25,7 @@
       <option value="mercator">Mercator</option>
       <option value="equidistant">Equidistante</option>
     </select>
+    <button id="astro-mode" class="btn">Modo astronómico</button>
     <button id="reset-map" class="btn">Restaurar mapa</button>
     <button id="route-toggle" class="btn">Ruta</button>
   </div>
@@ -32,6 +34,8 @@
     <button id="zoom-in" class="ctrl">+</button>
     <button id="zoom-out" class="ctrl">-</button>
     <button id="reset-north" class="ctrl">N</button>
+    <button id="flip-lat-axis" class="ctrl" title="Alternar eje Norte-Sur">NS</button>
+    <button id="astro-mode-fab" class="ctrl" title="Modo astronómico">☉</button>
     <button id="locate-me" class="ctrl">◎</button>
   </div>
 
@@ -53,9 +57,11 @@
   </div>
 
   <div id="status-bar" class="status-bar">Inicializando mapa...</div>
+  <div id="astro-legend" class="astro-legend hidden"></div>
   <div id="debug-panel" class="debug-panel hidden"></div>
   <div id="attribution" class="attribution">Datos cartográficos © OpenStreetMap contributors</div>
 
+  <script src="src/js/astro/ephemeris.js"></script>
   <script src="src/js/globe/globe.js"></script>
 </body>
 </html>

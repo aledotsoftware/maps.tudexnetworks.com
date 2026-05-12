@@ -2,6 +2,7 @@
   const DEG2RAD = Math.PI / 180;
   const RAD2DEG = 180 / Math.PI;
   const MAX_MERCATOR_LAT = 85.05112878;
+  const EARTH_AXIAL_TILT_RAD = 23.44 * DEG2RAD;
 
   const canvas = document.getElementById("globe-canvas");
   const gl = canvas.getContext("webgl", { antialias: true, alpha: false });
@@ -20,16 +21,20 @@
     routeInfo: document.getElementById("route-info"),
     basemapSelect: document.getElementById("basemap-select"),
     projectionSelect: document.getElementById("projection-select"),
+    astroMode: document.getElementById("astro-mode"),
+    astroModeFab: document.getElementById("astro-mode-fab"),
     layerMarkers: document.getElementById("layer-markers"),
     layerRoutes: document.getElementById("layer-routes"),
     layerGraticule: document.getElementById("layer-graticule"),
     statusBar: document.getElementById("status-bar"),
+    astroLegend: document.getElementById("astro-legend"),
     debugPanel: document.getElementById("debug-panel"),
     resetMap: document.getElementById("reset-map"),
     attribution: document.getElementById("attribution"),
     zoomIn: document.getElementById("zoom-in"),
     zoomOut: document.getElementById("zoom-out"),
     resetNorth: document.getElementById("reset-north"),
+    flipLatAxis: document.getElementById("flip-lat-axis"),
     locateMe: document.getElementById("locate-me"),
   };
 
@@ -37,6 +42,14 @@
   if (debugEnabled) ui.debugPanel.classList.remove("hidden");
 
   const BASEMAPS = {
+    tudex: {
+      id: "tudex",
+      label: "Tudex Personalizado",
+      attribution: "© Tudex Networks",
+      url: "/tiles/{z}/{x}/{y}.png",
+      fallback: "topo",
+      defaultZ: 2,
+    },
     osm: {
       id: "osm",
       label: "OpenStreetMap",
@@ -50,7 +63,7 @@
       label: "Esri Satellite",
       attribution: "Imágenes satelitales © Esri",
       url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Imagery/MapServer/tile/{z}/{y}/{x}",
-      fallback: "osm",
+      fallback: "topo",
       defaultZ: 2,
     },
     topo: {
@@ -58,17 +71,27 @@
       label: "Esri Topographic",
       attribution: "Mapa topográfico © Esri",
       url: "https://server.arcgisonline.com/ArcGIS/rest/services/World_Topo_Map/MapServer/tile/{z}/{y}/{x}",
-      fallback: "osm",
+      fallback: "sat",
       defaultZ: 2,
     },
   };
+
+  const PLANETS = [
+    { key: "mercury", label: "Mercurio", color: [0.85, 0.82, 0.72, 1], periodDays: 87.9691, L0: 252.25084 },
+    { key: "venus", label: "Venus", color: [0.96, 0.88, 0.62, 1], periodDays: 224.70069, L0: 181.97973 },
+    { key: "mars", label: "Marte", color: [0.95, 0.44, 0.29, 1], periodDays: 686.98, L0: 355.433 },
+    { key: "jupiter", label: "Júpiter", color: [0.91, 0.73, 0.5, 1], periodDays: 4332.59, L0: 34.351 },
+    { key: "saturn", label: "Saturno", color: [0.89, 0.79, 0.58, 1], periodDays: 10759.22, L0: 50.077 },
+    { key: "uranus", label: "Urano", color: [0.63, 0.92, 0.95, 1], periodDays: 30688.5, L0: 314.055 },
+    { key: "neptune", label: "Neptuno", color: [0.38, 0.62, 0.95, 1], periodDays: 60182, L0: 304.348 },
+  ];
 
   class RenderState {
     constructor() {
       this.textureStatus = "INIT";
       this.lastTextureError = null;
       this.activeProjection = "globe";
-      this.activeBasemap = "osm";
+      this.activeBasemap = "tudex";
       this.errors = [];
     }
 
@@ -161,39 +184,51 @@
     }
 
     async loadImage(url, timeoutMs) {
-      return await new Promise((resolve) => {
-        const img = new Image();
-        let done = false;
-        const timer = setTimeout(() => {
-          if (done) return;
-          done = true;
-          resolve({ ok: false, code: "NETWORK", message: "Tile timeout" });
-        }, timeoutMs);
-
-        img.crossOrigin = "anonymous";
-        img.onload = () => {
-          if (done) return;
-          done = true;
-          clearTimeout(timer);
-          resolve({ ok: true, image: img });
-        };
-        img.onerror = (e) => {
-          if (done) return;
-          done = true;
-          clearTimeout(timer);
-          resolve({ ok: false, code: "NETWORK", message: `Tile load failed: ${url}`, detail: String(e?.type || "") });
-        };
-        img.src = url;
-      });
+      const controller = new AbortController();
+      const timer = setTimeout(() => controller.abort(), timeoutMs);
+      try {
+        const response = await fetch(url, {
+          method: "GET",
+          mode: "cors",
+          cache: "default",
+          signal: controller.signal,
+        });
+        if (!response.ok) {
+          return {
+            ok: false,
+            code: response.status === 404 ? "HTTP_404" : "HTTP_ERROR",
+            status: response.status,
+            message: `Tile HTTP ${response.status}: ${url}`,
+          };
+        }
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const image = await new Promise((resolve, reject) => {
+          const img = new Image();
+          img.onload = () => resolve(img);
+          img.onerror = () => reject(new Error("decode"));
+          img.src = objectUrl;
+        });
+        URL.revokeObjectURL(objectUrl);
+        return { ok: true, image };
+      } catch (err) {
+        if (err?.name === "AbortError") {
+          return { ok: false, code: "NETWORK", message: "Tile timeout" };
+        }
+        return { ok: false, code: "NETWORK", message: `Tile load failed: ${url}` };
+      } finally {
+        clearTimeout(timer);
+      }
     }
 
     async fetchTile(z, x, y, basemapId) {
       const basemap = BASEMAPS[basemapId] || BASEMAPS.osm;
       const url = basemap.url.replace("{z}", String(z)).replace("{x}", String(x)).replace("{y}", String(y));
-      const retries = [1400, 2200];
+      const retries = [1800];
       for (let i = 0; i < retries.length; i++) {
         const result = await this.loadImage(url, retries[i]);
         if (result.ok) return { ok: true, image: result.image };
+        if (result.code === "HTTP_404") return { ok: false, code: "HTTP_404", message: result.message };
       }
       return { ok: false, code: "NETWORK", message: `No se pudo cargar tile z${z}/${x}/${y}` };
     }
@@ -210,29 +245,44 @@
       const ctx = atlas.getContext("2d");
 
       let failures = 0;
+      let missing404 = 0;
       const tasks = [];
       for (let y = 0; y < n; y++) {
         for (let x = 0; x < n; x++) {
-          tasks.push((async () => {
+          tasks.push(async () => {
             const tile = await this.fetchTile(tileZoom, x, y, basemapId);
             if (!tile.ok) {
               failures += 1;
+              if (tile.code === "HTTP_404") missing404 += 1;
               ctx.fillStyle = "#203247";
               ctx.fillRect(x * tileSize, y * tileSize, tileSize, tileSize);
               return;
             }
             ctx.drawImage(tile.image, x * tileSize, y * tileSize);
-          })());
+          });
         }
       }
-      await Promise.all(tasks);
+      const concurrency = 6;
+      let taskIndex = 0;
+      const workers = new Array(Math.min(concurrency, tasks.length)).fill(0).map(async () => {
+        while (taskIndex < tasks.length) {
+          const current = taskIndex;
+          taskIndex += 1;
+          await tasks[current]();
+        }
+      });
+      await Promise.all(workers);
       this.cache.set(key, atlas);
       if (failures > 0) {
         return {
           ok: false,
           atlas,
           key,
-          error: { code: "NETWORK", stage: "ATLAS_PARTIAL", message: `${failures} tiles fallaron` },
+          error: {
+            code: missing404 === failures ? "HTTP_404" : "NETWORK",
+            stage: "ATLAS_PARTIAL",
+            message: `${failures} tiles fallaron${missing404 ? ` (${missing404} sin publicar)` : ""}`,
+          },
         };
       }
       return { ok: true, atlas, key, fromCache: false };
@@ -254,7 +304,6 @@
       const primary = BASEMAPS[basemapId] || BASEMAPS.osm;
       const queue = [primary.id];
       if (primary.fallback) queue.push(primary.fallback);
-      if (!queue.includes("osm")) queue.push("osm");
 
       this.renderState.setStatus("LOADING", "Cargando mapa...", "ok");
       let applied = false;
@@ -317,6 +366,7 @@
     precision mediump float;
     varying vec3 vPos;
     uniform sampler2D uTex;
+    uniform vec3 uSunDir;
     void main() {
       const float PI = 3.141592653589793;
       const float MAX_LAT = 1.4844222297453324;
@@ -325,11 +375,33 @@
       lat = clamp(lat, -MAX_LAT, MAX_LAT);
       float u = 0.5 + lon / (2.0 * PI);
       float v = 0.5 - log(tan(PI * 0.25 + lat * 0.5)) / (2.0 * PI);
-      gl_FragColor = vec4(texture2D(uTex, vec2(fract(u), clamp(v, 0.0, 1.0))).rgb, 1.0);
+      vec3 base = texture2D(uTex, vec2(fract(u), clamp(v, 0.0, 1.0))).rgb;
+      vec3 n = normalize(vPos);
+      vec3 l = normalize(uSunDir);
+      vec3 vdir = normalize(vec3(0.0, 0.0, 1.6));
+
+      float ndotl = dot(n, l);
+      float dayMask = smoothstep(-0.10, 0.04, ndotl);
+      float twilight = exp(-abs(ndotl) * 16.0);
+
+      float diffuse = max(ndotl, 0.0);
+      float softDiffuse = pow(diffuse, 0.75);
+      float nightMask = 1.0 - smoothstep(-0.35, -0.02, ndotl);
+
+      vec3 h = normalize(l + vdir);
+      float spec = pow(max(dot(n, h), 0.0), 52.0) * 0.22;
+
+      vec3 dayColor = base * (0.55 + 0.55 * softDiffuse) + vec3(spec);
+      vec3 nightColor = base * 0.08 + vec3(0.012, 0.02, 0.04);
+      vec3 color = mix(nightColor, dayColor, dayMask);
+      color += vec3(0.95, 0.45, 0.12) * twilight * 0.08;
+      color *= mix(0.78, 1.0, 1.0 - nightMask * 0.25);
+      gl_FragColor = vec4(color, 1.0);
     }
   `;
 
   const flatVs = `
+    precision mediump float;
     attribute vec2 aPos;
     uniform float uScale;
     uniform vec2 uPan;
@@ -345,8 +417,10 @@
     precision mediump float;
     varying vec2 vUv;
     uniform sampler2D uTex;
+    uniform float uLatAxisSign;
     void main() {
-      gl_FragColor = vec4(texture2D(uTex, vUv).rgb, 1.0);
+      float y = mix(1.0 - vUv.y, vUv.y, step(0.0, uLatAxisSign));
+      gl_FragColor = vec4(texture2D(uTex, vec2(vUv.x, y)).rgb, 1.0);
     }
   `;
 
@@ -357,12 +431,14 @@
     uniform vec2 uPan;
     uniform vec2 uCenter; // lon0, lat0 in radians
     uniform sampler2D uTex;
+    uniform float uLatAxisSign;
     void main() {
       const float PI = 3.141592653589793;
       const float MAX_LAT = 1.4844222297453324; // ~85.0511
       const float EPS = 0.000001;
 
-      vec2 clip = vec2(vUv.x * 2.0 - 1.0, 1.0 - vUv.y * 2.0);
+      float vY = mix(1.0 - vUv.y, vUv.y, step(0.0, uLatAxisSign));
+      vec2 clip = vec2(vUv.x * 2.0 - 1.0, 1.0 - vY * 2.0);
       vec2 plane = (clip - uPan) / uScale;
       float x = plane.x * PI;
       float y = plane.y * PI;
@@ -463,14 +539,16 @@
 
   const renderState = new RenderState();
   const tileProvider = new TileProvider(gl, texture, renderState);
+  let basemapRequestInFlight = false;
+  let nextBasemapRetryAt = 0;
 
   const cam = {
     yaw: 0,
-    pitch: 0.2,
+    viewPitch: 0,
     zoom: -2.6,
     zoomTarget: -2.6,
     velYaw: 0,
-    velPitch: 0,
+    velViewPitch: 0,
     flatScale: 1,
     flatScaleTarget: 1,
     flatPanX: 0,
@@ -479,7 +557,7 @@
 
   const world = {
     projection: "globe",
-    basemap: "osm",
+    basemap: "tudex",
     routeMode: false,
     routeFrom: null,
     routeTo: null,
@@ -489,8 +567,24 @@
     showMarkers: true,
     showRoutes: true,
     showGraticule: false,
+    showSun: true,
+    astronomicalMode: false,
+    sunLat: 0,
+    sunLon: 0,
+    planets: [],
+    latAxisSign: 1,
     equiCenterLat: 0,
     equiCenterLon: 0,
+  };
+
+  const latAxisSignForProjection = () => (world.projection === "globe" ? 1 : world.latAxisSign);
+  const orientLat = (lat) => lat * latAxisSignForProjection();
+  const unorientLat = (lat) => lat * latAxisSignForProjection();
+  const updateLatAxisButton = () => {
+    if (!ui.flipLatAxis) return;
+    const reversed = world.latAxisSign < 0;
+    ui.flipLatAxis.classList.toggle("active", reversed);
+    ui.flipLatAxis.title = reversed ? "Eje Sur-Norte activo (click para volver)" : "Eje Norte-Sur activo (click para invertir)";
   };
 
   const mapEngine = {
@@ -500,11 +594,16 @@
       renderState.setProjection(mode);
       if (mode !== "globe") {
         cam.velYaw = 0;
-        cam.velPitch = 0;
       }
     },
     setBasemap(id) {
-      world.basemap = BASEMAPS[id] ? id : "osm";
+      let resolved = BASEMAPS[id] ? id : "tudex";
+      if (resolved === "osm") {
+        resolved = "topo";
+        renderState.setStatus("RETRYING", "OSM directo puede bloquear CORS/429 en WebGL; usando Topográfico.", "warn");
+      }
+      world.basemap = resolved;
+      if (ui.basemapSelect && ui.basemapSelect.value !== resolved) ui.basemapSelect.value = resolved;
       renderState.setBasemap(world.basemap);
     },
     getHealth() {
@@ -537,6 +636,10 @@
     const c = Math.cos(a), s = Math.sin(a);
     return [1, 0, 0, 0, 0, c, s, 0, 0, -s, c, 0, 0, 0, 0, 1];
   };
+  const rotZ = (a) => {
+    const c = Math.cos(a), s = Math.sin(a);
+    return [c, s, 0, 0, -s, c, 0, 0, 0, 0, 1, 0, 0, 0, 0, 1];
+  };
   const trans = (z) => {
     const m = I();
     m[14] = z;
@@ -549,6 +652,104 @@
     return 0.5 - Math.log(Math.tan(Math.PI / 4 + r / 2)) / (2 * Math.PI);
   };
   const latFromMercV = (v) => Math.atan(Math.sinh(Math.PI * (1 - 2 * v))) * RAD2DEG;
+  const clampLon = (lon) => {
+    let v = lon;
+    while (v > 180) v -= 360;
+    while (v < -180) v += 360;
+    return v;
+  };
+  const jdFromDate = (date) => date.getTime() / 86400000 + 2440587.5;
+  const gmstDegrees = (jd) => {
+    const T = (jd - 2451545.0) / 36525.0;
+    const theta = 280.46061837 + 360.98564736629 * (jd - 2451545) + 0.000387933 * T * T - (T * T * T) / 38710000;
+    return ((theta % 360) + 360) % 360;
+  };
+
+  function subsolarPoint(date = new Date()) {
+    const jd = date.getTime() / 86400000 + 2440587.5;
+    const T = (jd - 2451545.0) / 36525.0;
+    const L0 = (280.46646 + T * (36000.76983 + T * 0.0003032)) % 360;
+    const M = 357.52911 + T * (35999.05029 - 0.0001537 * T);
+    const Mrad = M * DEG2RAD;
+    const C = Math.sin(Mrad) * (1.914602 - T * (0.004817 + 0.000014 * T))
+      + Math.sin(2 * Mrad) * (0.019993 - 0.000101 * T)
+      + Math.sin(3 * Mrad) * 0.000289;
+    const trueLong = L0 + C;
+    const omega = 125.04 - 1934.136 * T;
+    const lambda = trueLong - 0.00569 - 0.00478 * Math.sin(omega * DEG2RAD);
+    const epsilon0 = 23 + (26 + ((21.448 - T * (46.815 + T * (0.00059 - T * 0.001813))) / 60)) / 60;
+    const epsilon = epsilon0 + 0.00256 * Math.cos(omega * DEG2RAD);
+
+    const lambdaRad = lambda * DEG2RAD;
+    const epsilonRad = epsilon * DEG2RAD;
+    const decl = Math.asin(Math.sin(epsilonRad) * Math.sin(lambdaRad)) * RAD2DEG;
+
+    const y = Math.tan(epsilonRad / 2) ** 2;
+    const eqTime = 4 * RAD2DEG * (
+      y * Math.sin(2 * L0 * DEG2RAD)
+      - 2 * 0.016708634 * Math.sin(Mrad)
+      + 4 * 0.016708634 * y * Math.sin(Mrad) * Math.cos(2 * L0 * DEG2RAD)
+      - 0.5 * y * y * Math.sin(4 * L0 * DEG2RAD)
+      - 1.25 * 0.016708634 * 0.016708634 * Math.sin(2 * Mrad)
+    );
+
+    const minutesUtc = date.getUTCHours() * 60 + date.getUTCMinutes() + date.getUTCSeconds() / 60;
+    let subsolarLon = (720 - minutesUtc - eqTime) / 4;
+    while (subsolarLon > 180) subsolarLon -= 360;
+    while (subsolarLon < -180) subsolarLon += 360;
+    return { lat: decl, lon: subsolarLon };
+  }
+
+  function eclipticLon(body, d) {
+    const meanMotion = 360 / body.periodDays;
+    return (body.L0 + meanMotion * d) % 360;
+  }
+
+  function computePlanetSubpoints(date = new Date()) {
+    const jd = jdFromDate(date);
+    const d = jd - 2451545.0;
+    const eps = 23.439291 * DEG2RAD;
+    const earthLon = eclipticLon({ periodDays: 365.256363004, L0: 100.466457 }, d) * DEG2RAD;
+    const ex = Math.cos(earthLon);
+    const ey = Math.sin(earthLon);
+    const gmst = gmstDegrees(jd);
+
+    return PLANETS.map((p) => {
+      const lp = eclipticLon(p, d) * DEG2RAD;
+      const px = Math.cos(lp);
+      const py = Math.sin(lp);
+      const gx = px - ex;
+      const gy = py - ey;
+      const rx = gx;
+      const ry = gy * Math.cos(eps);
+      const rz = gy * Math.sin(eps);
+      const ra = Math.atan2(ry, rx);
+      const dec = Math.atan2(rz, Math.hypot(rx, ry));
+      const raDeg = ((ra * RAD2DEG) + 360) % 360;
+      const gha = clampLon(gmst - raDeg);
+      const subLon = clampLon(-gha);
+      const subLat = dec * RAD2DEG;
+      return { key: p.key, label: p.label, color: p.color, lat: subLat, lon: subLon };
+    });
+  }
+
+  function updateAstronomicalState() {
+    const now = new Date();
+    const sun = subsolarPoint(now);
+    world.sunLat = sun.lat;
+    world.sunLon = sun.lon;
+    world.planets = computePlanetSubpoints(now);
+
+    if (!ui.astroLegend) return;
+    if (!(world.astronomicalMode && world.projection === "globe")) {
+      ui.astroLegend.classList.add("hidden");
+      return;
+    }
+    const header = `Modo astronómico\nSol: ${sun.lat.toFixed(2)}°, ${sun.lon.toFixed(2)}°`;
+    const lines = world.planets.map((p) => `${p.label}: ${p.lat.toFixed(1)}°, ${p.lon.toFixed(1)}°`);
+    ui.astroLegend.textContent = `${header}\n${lines.join("\n")}`;
+    ui.astroLegend.classList.remove("hidden");
+  }
 
   function latLonToSphere(lat, lon, radius = 1.01) {
     const latR = lat * DEG2RAD;
@@ -556,11 +757,16 @@
     return [radius * Math.cos(latR) * Math.cos(lonR), radius * Math.sin(latR), radius * Math.cos(latR) * Math.sin(lonR)];
   }
 
+  function globeModelMatrix() {
+    const southUpRotation = world.latAxisSign < 0 ? Math.PI : 0;
+    return mul(rotZ(EARTH_AXIAL_TILT_RAD + southUpRotation), rotY(cam.yaw));
+  }
+
   function projectFlat(lat, lon, projection) {
     if (projection === "equidistant") {
-      const latR = lat * DEG2RAD;
+      const latR = orientLat(lat) * DEG2RAD;
       const lonR = lon * DEG2RAD;
-      const lat0 = world.equiCenterLat * DEG2RAD;
+      const lat0 = orientLat(world.equiCenterLat) * DEG2RAD;
       const lon0 = world.equiCenterLon * DEG2RAD;
       const dlonRaw = lonR - lon0;
       const dlon = ((dlonRaw + Math.PI) % (2 * Math.PI)) - Math.PI;
@@ -582,7 +788,8 @@
       return [bx * cam.flatScale + cam.flatPanX, by * cam.flatScale + cam.flatPanY, 0];
     }
     const u = (lon + 180) / 360;
-    const v = projection === "mercator" ? mercVFromLat(lat) : (90 - lat) / 180;
+    const orientedLat = orientLat(lat);
+    const v = projection === "mercator" ? mercVFromLat(orientedLat) : (90 - orientedLat) / 180;
     return [
       (u * 2 - 1) * cam.flatScale + cam.flatPanX,
       (1 - 2 * v) * cam.flatScale + cam.flatPanY,
@@ -592,7 +799,10 @@
 
   function currentMvp() {
     const aspect = canvas.width / canvas.height;
-    return mul(perspective(Math.PI / 3, aspect, 0.1, 50), mul(trans(cam.zoom), mul(rotY(cam.yaw), rotX(cam.pitch))));
+    return mul(
+      perspective(Math.PI / 3, aspect, 0.1, 50),
+      mul(trans(cam.zoom), mul(rotX(cam.viewPitch), globeModelMatrix())),
+    );
   }
 
   function pickLatLon(clientX, clientY) {
@@ -611,7 +821,7 @@
       const y = by * Math.PI;
       const c = Math.hypot(x, y);
       if (c > Math.PI) return null;
-      const lat0 = world.equiCenterLat * DEG2RAD;
+      const lat0 = orientLat(world.equiCenterLat) * DEG2RAD;
       const lon0 = world.equiCenterLon * DEG2RAD;
       let latR;
       let lonR;
@@ -629,12 +839,13 @@
       }
       let lon = lonR * RAD2DEG;
       lon = ((lon + 540) % 360) - 180;
-      return { lat: latR * RAD2DEG, lon };
+      return { lat: unorientLat(latR * RAD2DEG), lon };
     }
     const u = (bx + 1) * 0.5;
     const v = (1 - by) * 0.5;
     const lon = u * 360 - 180;
-    const lat = world.projection === "mercator" ? latFromMercV(v) : 90 - v * 180;
+    const latOriented = world.projection === "mercator" ? latFromMercV(v) : 90 - v * 180;
+    const lat = unorientLat(latOriented);
     return { lat, lon };
   }
 
@@ -732,12 +943,14 @@
 
   function zoomToTileZoom() {
     if (world.projection === "globe") {
+      if (cam.zoomTarget > -1.2) return 5;
       if (cam.zoomTarget > -2.0) return 4;
       if (cam.zoomTarget > -3.0) return 3;
       return 2;
     }
-    if (cam.flatScaleTarget > 3) return 4;
-    if (cam.flatScaleTarget > 1.8) return 3;
+    if (cam.flatScaleTarget > 18) return 5;
+    if (cam.flatScaleTarget > 7) return 4;
+    if (cam.flatScaleTarget > 2.5) return 3;
     return 2;
   }
 
@@ -751,6 +964,11 @@
       gl.vertexAttribPointer(aPos, 3, gl.FLOAT, false, 0, 0);
       gl.bindBuffer(gl.ELEMENT_ARRAY_BUFFER, sphereIbo);
       gl.uniformMatrix4fv(uMvp, false, new Float32Array(currentMvp()));
+      const sun = subsolarPoint(new Date());
+      world.sunLat = sun.lat;
+      world.sunLon = sun.lon;
+      const sunDir = latLonToSphere(sun.lat, sun.lon, 1.0);
+      gl.uniform3f(gl.getUniformLocation(globeProgram, "uSunDir"), sunDir[0], sunDir[1], sunDir[2]);
       gl.drawElements(gl.TRIANGLES, sphere.idx.length, gl.UNSIGNED_SHORT, 0);
       return;
     }
@@ -762,11 +980,12 @@
     gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
     gl.uniform1f(gl.getUniformLocation(program, "uScale"), cam.flatScale);
     gl.uniform2f(gl.getUniformLocation(program, "uPan"), cam.flatPanX, cam.flatPanY);
+    gl.uniform1f(gl.getUniformLocation(program, "uLatAxisSign"), world.latAxisSign);
     if (world.projection === "equidistant") {
       gl.uniform2f(
         gl.getUniformLocation(program, "uCenter"),
         world.equiCenterLon * DEG2RAD,
-        world.equiCenterLat * DEG2RAD,
+        orientLat(world.equiCenterLat) * DEG2RAD,
       );
     }
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
@@ -809,6 +1028,17 @@
       draw(pts, gl.POINTS, [1.0, 0.32, 0.2, 1.0]);
     }
 
+    if (world.projection === "globe" && world.showSun) {
+      const sunPt = latLonToSphere(world.sunLat, world.sunLon, 1.035);
+      draw(sunPt, gl.POINTS, [1.0, 0.95, 0.3, 1.0]);
+    }
+    if (world.projection === "globe" && world.astronomicalMode && world.planets.length) {
+      for (const p of world.planets) {
+        const pt = latLonToSphere(p.lat, p.lon, 1.03);
+        draw(pt, gl.POINTS, p.color);
+      }
+    }
+
     if (world.showGraticule) {
       const pts = [];
       for (let lat = -80; lat <= 80; lat += 20) {
@@ -825,13 +1055,13 @@
     if (world.projection === "globe") {
       if (!dragging) {
         cam.yaw += cam.velYaw;
-        cam.pitch += cam.velPitch;
+        cam.viewPitch += cam.velViewPitch;
         cam.velYaw *= 0.94;
-        cam.velPitch *= 0.94;
+        cam.velViewPitch *= 0.9;
         if (Math.abs(cam.velYaw) < 1e-5) cam.velYaw = 0;
-        if (Math.abs(cam.velPitch) < 1e-5) cam.velPitch = 0;
+        if (Math.abs(cam.velViewPitch) < 1e-5) cam.velViewPitch = 0;
       }
-      cam.pitch = Math.max(-1.3, Math.min(1.3, cam.pitch));
+      cam.viewPitch = Math.max(-1.1, Math.min(1.1, cam.viewPitch));
       cam.zoom += (cam.zoomTarget - cam.zoom) * 0.16;
     } else {
       cam.flatScale += (cam.flatScaleTarget - cam.flatScale) * 0.2;
@@ -845,12 +1075,27 @@
   }
 
   async function ensureBasemap() {
+    if (basemapRequestInFlight) return;
+    if (Date.now() < nextBasemapRetryAt) return;
+    basemapRequestInFlight = true;
     const tileZoom = zoomToTileZoom();
-    await tileProvider.setBasemapWithFallback(world.basemap, tileZoom, world.projection);
+    try {
+      await tileProvider.setBasemapWithFallback(world.basemap, tileZoom, world.projection);
+      if (tileProvider.currentKey.startsWith("placeholder:")) {
+        nextBasemapRetryAt = Date.now() + 8000;
+      } else if (renderState.lastTextureError?.code === "HTTP_404") {
+        nextBasemapRetryAt = Date.now() + 60000;
+      } else {
+        nextBasemapRetryAt = 0;
+      }
+    } finally {
+      basemapRequestInFlight = false;
+    }
   }
 
   function render() {
     updateMotion();
+    updateAstronomicalState();
     const expected = `${renderState.activeBasemap}:${zoomToTileZoom()}:${world.projection}`;
     if (expected !== tileProvider.currentKey) ensureBasemap();
 
@@ -877,7 +1122,7 @@
     ui.routePanel.classList.add("hidden");
     ui.popup.classList.add("hidden");
     cam.yaw = 0;
-    cam.pitch = 0.2;
+    cam.viewPitch = 0;
     cam.zoom = -2.6;
     cam.zoomTarget = -2.6;
     cam.flatScale = 1;
@@ -901,7 +1146,7 @@
   function flyTo(lat, lon) {
     if (world.projection === "globe") {
       cam.yaw = -(lon * DEG2RAD);
-      cam.pitch = -(lat * DEG2RAD) * 0.6;
+      cam.viewPitch = Math.max(-1.0, Math.min(1.0, lat * DEG2RAD * 0.75));
     } else if (world.projection === "equidistant") {
       world.equiCenterLat = Math.max(-85, Math.min(85, lat));
       world.equiCenterLon = ((lon + 540) % 360) - 180;
@@ -968,21 +1213,27 @@
   };
 
   ui.zoomIn.onclick = () => {
-    if (world.projection === "globe") cam.zoomTarget = Math.min(-1.25, cam.zoomTarget + 0.25);
-    else cam.flatScaleTarget = Math.min(10, cam.flatScaleTarget * 1.2);
+    if (world.projection === "globe") cam.zoomTarget = Math.min(-0.65, cam.zoomTarget + 0.3);
+    else cam.flatScaleTarget = Math.min(80, cam.flatScaleTarget * 1.3);
   };
   ui.zoomOut.onclick = () => {
-    if (world.projection === "globe") cam.zoomTarget = Math.max(-5, cam.zoomTarget - 0.25);
-    else cam.flatScaleTarget = Math.max(0.8, cam.flatScaleTarget / 1.2);
+    if (world.projection === "globe") cam.zoomTarget = Math.max(-8, cam.zoomTarget - 0.3);
+    else cam.flatScaleTarget = Math.max(0.45, cam.flatScaleTarget / 1.3);
   };
   ui.resetNorth.onclick = () => {
     cam.yaw = 0;
-    cam.pitch = 0.2;
+    cam.viewPitch = 0;
     cam.velYaw = 0;
-    cam.velPitch = 0;
+    cam.velViewPitch = 0;
     cam.flatPanX = 0;
     cam.flatPanY = 0;
   };
+  if (ui.flipLatAxis) {
+    ui.flipLatAxis.onclick = () => {
+      world.latAxisSign *= -1;
+      updateLatAxisButton();
+    };
+  }
   ui.locateMe.onclick = () => {
     navigator.geolocation.getCurrentPosition((pos) => {
       const marker = { lat: pos.coords.latitude, lon: pos.coords.longitude, label: "Mi ubicación" };
@@ -1005,6 +1256,28 @@
     mapEngine.setProjection(ui.projectionSelect.value);
     ensureBasemap();
   };
+  const toggleAstronomicalMode = () => {
+    world.astronomicalMode = !world.astronomicalMode;
+    if (ui.astroMode) {
+      ui.astroMode.classList.toggle("active", world.astronomicalMode);
+      ui.astroMode.textContent = world.astronomicalMode ? "Modo astronómico: ON" : "Modo astronómico";
+    }
+    if (ui.astroModeFab) ui.astroModeFab.classList.toggle("active", world.astronomicalMode);
+    if (world.astronomicalMode) {
+      mapEngine.setProjection("globe");
+      ui.projectionSelect.value = "globe";
+    }
+  };
+  if (ui.astroMode) {
+    ui.astroMode.onclick = () => {
+      toggleAstronomicalMode();
+    };
+  }
+  if (ui.astroModeFab) {
+    ui.astroModeFab.onclick = () => {
+      toggleAstronomicalMode();
+    };
+  }
 
   ui.resetMap.onclick = () => resetRuntime();
 
@@ -1017,20 +1290,25 @@
     lx = e.clientX;
     ly = e.clientY;
     cam.velYaw = 0;
-    cam.velPitch = 0;
+    cam.velViewPitch = 0;
   });
 
-  window.addEventListener("pointerup", () => { dragging = false; });
+  window.addEventListener("pointerup", () => {
+    dragging = false;
+  });
 
   window.addEventListener("pointermove", (e) => {
     if (!dragging) return;
     const dx = e.clientX - lx;
     const dy = e.clientY - ly;
     if (world.projection === "globe") {
-      cam.velYaw = dx * 0.0007;
-      cam.velPitch = dy * 0.0007;
-      cam.yaw += dx * 0.005;
-      cam.pitch += dy * 0.004;
+      const spinStep = -dx * 0.005;
+      const pitchStep = dy * 0.0035;
+      cam.yaw += spinStep;
+      cam.viewPitch += pitchStep;
+      cam.viewPitch = Math.max(-1.1, Math.min(1.1, cam.viewPitch));
+      cam.velYaw = spinStep * 0.25;
+      cam.velViewPitch = pitchStep * 0.2;
     } else if (world.projection === "equidistant") {
       const lonScale = 180 / Math.max(0.4, cam.flatScale);
       const latScale = 90 / Math.max(0.4, cam.flatScale);
@@ -1046,18 +1324,18 @@
 
   canvas.addEventListener("wheel", (e) => {
     if (world.projection === "globe") {
-      cam.zoomTarget += e.deltaY * 0.0015;
-      cam.zoomTarget = Math.max(-5.0, Math.min(-1.25, cam.zoomTarget));
+      cam.zoomTarget -= e.deltaY * 0.0015;
+      cam.zoomTarget = Math.max(-8.0, Math.min(-0.65, cam.zoomTarget));
     } else {
-      const factor = Math.exp(-e.deltaY * 0.0012);
-      cam.flatScaleTarget = Math.max(0.8, Math.min(10, cam.flatScaleTarget * factor));
+      const factor = Math.exp(e.deltaY * 0.0012);
+      cam.flatScaleTarget = Math.max(0.45, Math.min(80, cam.flatScaleTarget * factor));
     }
     e.preventDefault();
   }, { passive: false });
 
   canvas.addEventListener("dblclick", () => {
-    if (world.projection === "globe") cam.zoomTarget = Math.min(-1.25, cam.zoomTarget + 0.4);
-    else cam.flatScaleTarget = Math.min(10, cam.flatScaleTarget * 1.25);
+    if (world.projection === "globe") cam.zoomTarget = Math.min(-0.65, cam.zoomTarget + 0.45);
+    else cam.flatScaleTarget = Math.min(80, cam.flatScaleTarget * 1.35);
   });
 
   canvas.addEventListener("click", (e) => {
@@ -1088,6 +1366,8 @@
 
   renderState.setProjection(world.projection);
   renderState.setBasemap(world.basemap);
+  if (ui.basemapSelect) ui.basemapSelect.value = world.basemap;
+  updateLatAxisButton();
   renderState.setStatus("LOADING", "Cargando mapa...", "ok");
   ensureBasemap().finally(() => requestAnimationFrame(render));
 })();
