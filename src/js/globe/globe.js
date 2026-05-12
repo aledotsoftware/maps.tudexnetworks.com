@@ -403,42 +403,52 @@
   const flatVs = `
     precision mediump float;
     attribute vec2 aPos;
-    uniform float uScale;
-    uniform vec2 uPan;
-    varying vec2 vUv;
+    varying vec2 vPos;
     void main() {
-      vec2 p = aPos * uScale + uPan;
-      gl_Position = vec4(p, 0.0, 1.0);
-      vUv = vec2((aPos.x + 1.0) * 0.5, (1.0 - aPos.y) * 0.5);
+      gl_Position = vec4(aPos, 0.0, 1.0);
+      vPos = aPos;
     }
   `;
 
   const flatFsMercator = `
     precision mediump float;
-    varying vec2 vUv;
+    varying vec2 vPos;
     uniform sampler2D uTex;
+    uniform float uScale;
+    uniform vec2 uPan;
+    uniform float uAspect;
     uniform float uLatAxisSign;
     void main() {
-      float y = mix(1.0 - vUv.y, vUv.y, step(0.0, uLatAxisSign));
-      gl_FragColor = vec4(texture2D(uTex, vec2(vUv.x, y)).rgb, 1.0);
+      vec2 clip = vPos;
+      clip.x *= uAspect;
+      vec2 plane = (clip - uPan) / uScale;
+      float u = plane.x * 0.5 + 0.5;
+      float v = 0.5 - plane.y * 0.5;
+      float vY = mix(1.0 - v, v, step(0.0, uLatAxisSign));
+      if (vY < 0.0 || vY > 1.0) {
+        gl_FragColor = vec4(0.02, 0.04, 0.08, 1.0);
+      } else {
+        gl_FragColor = vec4(texture2D(uTex, vec2(fract(u), vY)).rgb, 1.0);
+      }
     }
   `;
 
   const flatFsEquidistant = `
     precision mediump float;
-    varying vec2 vUv;
+    varying vec2 vPos;
     uniform float uScale;
     uniform vec2 uPan;
-    uniform vec2 uCenter; // lon0, lat0 in radians
+    uniform vec2 uCenter;
+    uniform float uAspect;
     uniform sampler2D uTex;
     uniform float uLatAxisSign;
     void main() {
       const float PI = 3.141592653589793;
-      const float MAX_LAT = 1.4844222297453324; // ~85.0511
+      const float MAX_LAT = 1.4844222297453324;
       const float EPS = 0.000001;
 
-      float vY = mix(1.0 - vUv.y, vUv.y, step(0.0, uLatAxisSign));
-      vec2 clip = vec2(vUv.x * 2.0 - 1.0, 1.0 - vY * 2.0);
+      vec2 clip = vPos;
+      clip.x *= uAspect;
       vec2 plane = (clip - uPan) / uScale;
       float x = plane.x * PI;
       float y = plane.y * PI;
@@ -449,8 +459,8 @@
         return;
       }
 
-      float lon0 = uCenter.x;
       float lat0 = uCenter.y;
+      float lon0 = uCenter.x;
       float sinLat0 = sin(lat0);
       float cosLat0 = cos(lat0);
 
@@ -468,8 +478,28 @@
 
       lat = clamp(lat, -MAX_LAT, MAX_LAT);
       float u = fract((lon + PI) / (2.0 * PI));
-      float mercV = 0.5 - log(tan(PI * 0.25 + lat * 0.5)) / (2.0 * PI);
-      gl_FragColor = vec4(texture2D(uTex, vec2(u, clamp(mercV, 0.0, 1.0))).rgb, 1.0);
+      
+      float unorientedLat = lat * uLatAxisSign;
+      float mercV = 0.5 - log(tan(PI * 0.25 + unorientedLat * 0.5)) / (2.0 * PI);
+      vec3 color = texture2D(uTex, vec2(u, clamp(mercV, 0.0, 1.0))).rgb;
+
+      float latDeg = lat * 180.0 / PI;
+      float lonDeg = lon * 180.0 / PI;
+      float latMod = mod(latDeg, 15.0);
+      float lonMod = mod(lonDeg, 15.0);
+      float latLine = min(latMod, 15.0 - latMod);
+      float lonLine = min(lonMod, 15.0 - lonMod);
+      
+      float degPerPixel = 180.0 / (uScale * 300.0);
+      if (latLine < degPerPixel || lonLine < degPerPixel) {
+        color = mix(color, vec3(0.5, 0.7, 0.9), 0.35);
+      }
+      
+      if (c > PI - 0.005 / uScale) {
+        color = mix(color, vec3(0.3, 0.5, 0.7), 0.8);
+      }
+
+      gl_FragColor = vec4(color, 1.0);
     }
   `;
 
@@ -785,16 +815,18 @@
       }
       const bx = x / Math.PI;
       const by = y / Math.PI;
-      return [bx * cam.flatScale + cam.flatPanX, by * cam.flatScale + cam.flatPanY, 0];
+      const clipX = bx * cam.flatScale + cam.flatPanX;
+      const clipY = by * cam.flatScale + cam.flatPanY;
+      const aspect = canvas.width / canvas.height;
+      return [clipX / aspect, clipY, 0];
     }
     const u = (lon + 180) / 360;
     const orientedLat = orientLat(lat);
     const v = projection === "mercator" ? mercVFromLat(orientedLat) : (90 - orientedLat) / 180;
-    return [
-      (u * 2 - 1) * cam.flatScale + cam.flatPanX,
-      (1 - 2 * v) * cam.flatScale + cam.flatPanY,
-      0,
-    ];
+    const bx = u * 2 - 1;
+    const by = 1 - 2 * v;
+    const aspect = canvas.width / canvas.height;
+    return [(bx * cam.flatScale + cam.flatPanX) / aspect, by * cam.flatScale + cam.flatPanY, 0];
   }
 
   function currentMvp() {
@@ -811,10 +843,13 @@
   }
 
   function pickFlat(clientX, clientY) {
+    const aspect = canvas.width / canvas.height;
     const nx = (2 * clientX) / canvas.clientWidth - 1;
     const ny = 1 - (2 * clientY) / canvas.clientHeight;
-    const bx = (nx - cam.flatPanX) / cam.flatScale;
-    const by = (ny - cam.flatPanY) / cam.flatScale;
+    const clipX = nx * aspect;
+    const clipY = ny;
+    const bx = (clipX - cam.flatPanX) / cam.flatScale;
+    const by = (clipY - cam.flatPanY) / cam.flatScale;
     if (bx < -1 || bx > 1 || by < -1 || by > 1) return null;
     if (world.projection === "equidistant") {
       const x = bx * Math.PI;
@@ -973,6 +1008,7 @@
       return;
     }
     const program = world.projection === "mercator" ? flatMercatorProgram : flatEquidistantProgram;
+    const aspect = canvas.width / canvas.height;
     gl.useProgram(program);
     const aPos = gl.getAttribLocation(program, "aPos");
     gl.bindBuffer(gl.ARRAY_BUFFER, quadVbo);
@@ -980,6 +1016,7 @@
     gl.vertexAttribPointer(aPos, 2, gl.FLOAT, false, 0, 0);
     gl.uniform1f(gl.getUniformLocation(program, "uScale"), cam.flatScale);
     gl.uniform2f(gl.getUniformLocation(program, "uPan"), cam.flatPanX, cam.flatPanY);
+    gl.uniform1f(gl.getUniformLocation(program, "uAspect"), aspect);
     gl.uniform1f(gl.getUniformLocation(program, "uLatAxisSign"), world.latAxisSign);
     if (world.projection === "equidistant") {
       gl.uniform2f(

@@ -1,0 +1,15 @@
+version: '3.8'
+
+services:
+  # Servidor de Mapas (TileServer GL)
+  # Este servicio tomará los teselados (.mbtiles) generados localmente y los servirá a nuestro Frontend.
+  tileserver:
+    image: maptiler/tileserver-gl
+    container_name: tudex-tileserver
+    ports:
+      - "8080:80"
+    volumes:
+      - ./data:/data
+    # Inicia sirviendo el mapa local de Bahía Blanca
+    command: "-m /data/bahia-blanca.mbtiles"
+    restart: unless-stopped

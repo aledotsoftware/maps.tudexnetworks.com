@@ -3,65 +3,67 @@
 <head>
   <meta charset="utf-8" />
   <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Maps Tudex - Globo 3D</title>
-  <link rel="stylesheet" href="src/styles/css/globe.css" />
+  <title>Maps Tudex - V2 Deep Night</title>
+  <style>
+    body, html { margin: 0; padding: 0; width: 100%; height: 100%; overflow: hidden; font-family: 'Inter', sans-serif; background: #0B0D17; }
+    #map-container { width: 100%; height: 100%; position: absolute; top: 0; left: 0; }
+    
+    /* Frutiger Aero / Glassmorphism UI */
+    .topbar {
+      position: absolute;
+      top: 20px;
+      left: 50%;
+      transform: translateX(-50%);
+      display: flex;
+      gap: 15px;
+      padding: 10px 20px;
+      background: rgba(11, 13, 23, 0.4);
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      border: 1px solid rgba(100, 255, 218, 0.2);
+      border-radius: 20px;
+      box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+      z-index: 1000;
+    }
+
+    .btn {
+      background: rgba(255, 255, 255, 0.05);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      color: #CCD6F6;
+      padding: 8px 16px;
+      border-radius: 12px;
+      cursor: pointer;
+      transition: all 0.3s ease;
+      font-size: 14px;
+      outline: none;
+    }
+
+    .btn:hover {
+      background: rgba(100, 255, 218, 0.15);
+      border-color: rgba(100, 255, 218, 0.5);
+      box-shadow: 0 0 15px rgba(100, 255, 218, 0.3);
+      color: #64FFDA;
+    }
+
+    #search-input {
+      background: transparent;
+      border: none;
+      color: #FFF;
+      outline: none;
+      width: 250px;
+    }
+    #search-input::placeholder { color: rgba(255,255,255,0.5); }
+  </style>
 </head>
 <body>
-  <canvas id="globe-canvas"></canvas>
+  <div id="map-container"></div>
 
   <div class="topbar">
-    <div class="search-wrap">
-      <input id="search-input" type="text" placeholder="Buscar ciudad, calle o lugar" autocomplete="off" />
-      <div id="search-results" class="search-results"></div>
-    </div>
-    <select id="basemap-select" class="btn">
-      <option value="tudex">Tudex</option>
-      <option value="osm">Calles</option>
-      <option value="sat">Satélite</option>
-      <option value="topo">Topográfico</option>
-    </select>
-    <select id="projection-select" class="btn">
-      <option value="globe">Globo</option>
-      <option value="mercator">Mercator</option>
-      <option value="equidistant">Equidistante</option>
-    </select>
-    <button id="astro-mode" class="btn">Modo astronómico</button>
-    <button id="reset-map" class="btn">Restaurar mapa</button>
-    <button id="route-toggle" class="btn">Ruta</button>
+    <input id="search-input" type="text" placeholder="Buscar lugar..." />
+    <button class="btn" id="btn-layer">Cargar Capa Local</button>
+    <button class="btn" id="btn-3d">Vista 3D</button>
   </div>
 
-  <div class="controls">
-    <button id="zoom-in" class="ctrl">+</button>
-    <button id="zoom-out" class="ctrl">-</button>
-    <button id="reset-north" class="ctrl">N</button>
-    <button id="flip-lat-axis" class="ctrl" title="Alternar eje Norte-Sur">NS</button>
-    <button id="astro-mode-fab" class="ctrl" title="Modo astronómico">☉</button>
-    <button id="locate-me" class="ctrl">◎</button>
-  </div>
-
-  <div id="layers-panel" class="route-panel">
-    <label><input id="layer-markers" type="checkbox" checked /> Marcadores</label>
-    <label><input id="layer-routes" type="checkbox" checked /> Rutas</label>
-    <label><input id="layer-graticule" type="checkbox" /> Grilla</label>
-  </div>
-
-  <div id="route-panel" class="route-panel hidden route-position">
-    <input id="route-from" type="text" placeholder="Origen" />
-    <input id="route-to" type="text" placeholder="Destino" />
-    <button id="route-build" class="btn">Trazar ruta</button>
-    <div id="route-info"></div>
-  </div>
-
-  <div id="popup" class="popup hidden">
-    <div id="popup-content"></div>
-  </div>
-
-  <div id="status-bar" class="status-bar">Inicializando mapa...</div>
-  <div id="astro-legend" class="astro-legend hidden"></div>
-  <div id="debug-panel" class="debug-panel hidden"></div>
-  <div id="attribution" class="attribution">Datos cartográficos © OpenStreetMap contributors</div>
-
-  <script src="src/js/astro/ephemeris.js"></script>
-  <script src="src/js/globe/globe.js"></script>
+  <script type="module" src="/src/main.js"></script>
 </body>
 </html>
