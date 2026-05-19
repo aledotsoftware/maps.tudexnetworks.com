@@ -15,3 +15,7 @@
 ## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
 **Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
 **Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
+
+## 2024-05-19 - Explicit focus rings for custom UI
+**Learning:** Custom UI components that strip default outlines (`outline: none`) must explicitly define `:focus-visible` states to remain accessible for keyboard users.
+**Action:** Always add `:focus-visible` styles when overriding default browser focus rings on buttons or inputs.
