@@ -113,6 +113,10 @@
   text-align: center;
   opacity: 0.6;
 }
+.loadservice-layer-img:focus-visible {
+  outline: 2px solid var(--primary-color);
+  outline-offset: 2px;
+}
 .loadservice-layer-img img {
   height: 20px;
 }
