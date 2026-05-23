@@ -15,3 +15,6 @@
 ## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
 **Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
 **Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
+## 2024-05-20 - Restoring Keyboard Navigation in Glassmorphism UIs
+**Learning:** In the custom Frutiger Aero/Glassmorphism UI pattern used throughout this app, default focus rings were aggressively removed (`outline: none`) for aesthetic reasons, completely breaking keyboard accessibility for interactive elements like topbar buttons and search inputs.
+**Action:** Whenever a custom glassmorphism component strips default outlines, immediately implement a `:focus-visible` pseudo-class using the app's neon accent color (`#64FFDA`) and a positive `outline-offset` to restore visibility for keyboard users without affecting mouse users.
