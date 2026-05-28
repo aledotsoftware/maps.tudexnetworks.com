@@ -15,3 +15,7 @@
 ## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
 **Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
 **Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
+
+## 2026-05-28 - Restoring outline for outline: none elements
+**Learning:** Custom UI inputs and buttons in this app often have their default focus outlines removed via `outline: none;`, which breaks visual keyboard navigation feedback.
+**Action:** When adding `:focus-visible` styles to restore outlines, ensure to use `outline-offset` along with `outline` to provide clear visual feedback without disrupting the layout.
