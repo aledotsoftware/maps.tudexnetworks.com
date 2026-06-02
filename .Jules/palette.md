@@ -15,3 +15,6 @@
 ## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
 **Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
 **Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
+## 2026-06-02 - Keyboard focus outlines and ARIA labels on inputs
+**Learning:** Inputs with `outline: none;` and no explicit `<label>` make keyboard navigation visually invisible and fail to announce context to screen readers, especially in custom UI patterns like topbars.
+**Action:** When finding custom inputs or buttons with disabled outlines, always add `:focus-visible` styles utilizing `outline` and `outline-offset` to restore keyboard accessibility without disrupting visual layout, and ensure inputs have an explicit `aria-label` when standard labels aren't present.
