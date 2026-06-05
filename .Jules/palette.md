@@ -15,3 +15,6 @@
 ## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
 **Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
 **Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
+## 2026-06-05 - Accessibility: Keyboard Focus Outlines and Input Labels
+**Learning:** In the GeoCore Map Engine, interactive elements like `.btn` and `#search-input` had `outline: none;` without providing alternative focus indicators, breaking keyboard navigability. Additionally, input fields lacking visible `<label>` tags (like the search bar) were inaccessible to screen readers without an `aria-label`.
+**Action:** Always replace `outline: none;` with a proper `:focus-visible` CSS state utilizing `outline` and `outline-offset` to ensure visible focus rings for keyboard users without disrupting visual design. Always add an `aria-label` to input fields that lack an associated `<label>` tag.
