@@ -15,3 +15,6 @@
 ## 2024-04-24 - Accessibility: ARIA labels on dynamic icon-only buttons
 **Learning:** When JavaScript dynamically injects elements (like a logout button after a successful login), developers often remember to add icon classes but forget the `aria-label` because the element doesn't exist in the static HTML file where accessibility linters usually run.
 **Action:** When auditing vanilla JavaScript code that builds DOM elements via `document.createElement`, specifically look for interactive elements (`button`, `a`) that only contain `innerHTML` with `<i>` or `<span>` icon tags. Ensure they receive an `setAttribute("aria-label", "...")` before being appended to the DOM.
+## 2024-06-07 - Add accessible focus rings to Glassmorphism UI
+**Learning:** In the GeoCore Map Engine repository, the Frutiger Aero / Glassmorphism UI styles applied `outline: none;` to inputs and buttons, which broke keyboard navigation. Custom styles are needed to maintain accessibility without breaking the design theme.
+**Action:** Added `aria-label` to icon-only inputs and explicit `:focus-visible` rules (`outline: 2px solid #64FFDA; outline-offset: 2px;`) to interactive elements.
