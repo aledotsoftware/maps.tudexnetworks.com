@@ -149,9 +149,9 @@ loginatic = function () {
             <div id="advice-wrapper" class="justify-content-center">
                 <div class="container-fluid col-12 col-xs-12 col-sm-6 col-md-6 mt-5 text-center" style="display: flex;align-items: center;">
                     <div class="white-modal" style="margin-top:150px;">
-                        <a href="javascript:void(0) " class="closer " onclick="document.getElementById( 'advice-wrapper').style.display='none' ; ">
-                            <i class="fa fa-times "></i>
-                        </a>
+                        <button type="button" class="closer" aria-label="Cerrar" onclick="document.getElementById('advice-wrapper').style.display='none';">
+                            <i class="fa fa-times" aria-hidden="true"></i>
+                        </button>
                         <p style="margin-top:30px; " 2>Su municipio ya posee clave asignada, la misma ha sido enviada al mail de contacto informado a la Subsecretaría de Relaciones Municipales del Ministerio del Interior.<br> Por favor verifique con las autoridades de su Gobierno Local.</p>
                         <p>En caso de no poder solucionarlo, envíe un mail a: <a href="mailto:datosmunicipales@mininterior.gob.ar " target="_blank ">datosmunicipales@mininterior.gob.ar</a><br> indicando nombre del Gobierno Local, provincia, su nombre y apellido, cargo y teléfono de contacto oficial</p>
                     </div>
