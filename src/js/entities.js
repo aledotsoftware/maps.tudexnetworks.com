@@ -4186,18 +4186,12 @@ class Menu_UI {
       // }
     };
 
-    let zoom_button = document.createElement("div");
+    let zoom_button = document.createElement("button");
+    zoom_button.type = "button";
     zoom_button.className = "loadservice-layer-img";
-    zoom_button.setAttribute("role", "button");
-    zoom_button.setAttribute("tabindex", "0");
+    zoom_button.style.cssText = "background: transparent; border: none; padding: 0; outline-offset: 2px;";
     zoom_button.setAttribute("aria-label", "Zoom a capa");
     zoom_button.innerHTML = `<i class="fas fa-search-plus" title="Zoom a capa" aria-hidden="true"></i>`;
-    zoom_button.addEventListener("keydown", function (e) {
-      if (e.key === "Enter" || e.key === " ") {
-        e.preventDefault();
-        zoom_button.click();
-      }
-    });
     zoom_button.onclick = function () {
       clickWMSLayer(layer, layer_item, fileName);
       let bounds = [
