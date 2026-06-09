@@ -1420,6 +1420,10 @@ function loadingBtn(status, idBtn, btnName) {
       '<i class="fas fa-spinner fa-spin" aria-hidden="true"></i>';
     $("#ejec_gp").addClass("ag-btn-disabled");
     $("#" + idBtn).addClass("ag-btn-disabled");
+    if (btn_ejecutar) {
+      btn_ejecutar.disabled = true;
+      btn_ejecutar.setAttribute("aria-disabled", "true");
+    }
   } else if (status === "off") {
     if (btnName) {
       btn_ejecutar.innerHTML = btnName;
@@ -1427,6 +1431,10 @@ function loadingBtn(status, idBtn, btnName) {
       btn_ejecutar.innerHTML = "Ejecutar";
     }
     $("#" + idBtn).removeClass("ag-btn-disabled");
+    if (btn_ejecutar) {
+      btn_ejecutar.disabled = false;
+      btn_ejecutar.setAttribute("aria-disabled", "false");
+    }
   }
 }
 
