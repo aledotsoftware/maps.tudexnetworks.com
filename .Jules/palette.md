@@ -19,3 +19,7 @@
 ## 2024-05-01 - Testing dynamically injected components with Playwright
 **Learning:** When using Playwright to test individual UI components (like a modal or configuration window) that are dynamically injected into the DOM by a vanilla JS class, creating a complex HTML string directly in `page.goto("data:text/html,...")` can lead to evaluation errors or page crashes, especially if the component depends on global state or specific markup structures.
 **Action:** Instead of inline HTML data URIs, write a temporary HTML harness file to the local filesystem (e.g., `test_component.html`) and load it via the local development server (`http://localhost:3000/test_component.html`). This provides a stable environment for scripts and stylesheets to load and for Playwright to interact with the DOM predictably.
+
+## 2026-06-10 - Keyboard accessibility in Glassmorphism UI
+**Learning:** Themed UI designs like Glassmorphism or Frutiger Aero often globally disable default focus indicators (`outline: none`) for aesthetic reasons, completely breaking keyboard navigability.
+**Action:** Always complement `outline: none` declarations with a custom `:focus-visible` rule that uses thematic colors (e.g., `#64FFDA`) and `outline-offset` to ensure interactive elements are visibly focused without disrupting the intended layout.
